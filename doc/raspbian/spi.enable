@@ -1,0 +1,14 @@
+sudo nano /etc/modprobe.d/raspi-blacklist.conf
+
+make sure there IS a # before blacklist spi-bcm2708, so it looks like this…
+#blacklist spi-bcm2708
+
+You will also need to add “dtparam=spi=on” to your config.txt and reboot.
+
+sudo nano /boot/config.txt
+
+add…
+
+dtparam=spi=on
+
+sudo reboot
