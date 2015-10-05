@@ -10,7 +10,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "lib_sem_internal.h"
+#include "internal/lib_sem_internal.h"
 
 extern int frw_semPend(void* frw_sem, int timeout);
 extern int frw_semPost(void* frw_sem);

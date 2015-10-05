@@ -10,7 +10,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "lib_spi_internal.h"
+#include "internal/lib_spi_internal.h"
 
 extern int frw_spiOpenDevice(void* frm_dev);
 extern int frw_spiCloseDevice(void* frm_dev);
