@@ -4,6 +4,7 @@
  *  Created on: Oct 5, 2015
  *      Author: dev
  */
+
 #include "frw_spi_internal.h"
 #include <stdint.h>
 #include <unistd.h>
@@ -194,4 +195,5 @@ int frw_spiSetBitWord(void* frw_dev, int bitPerWord){
 	}
 	return ret;
 }
+
 

@@ -7,6 +7,9 @@
 
 #ifndef LIB_FRW_LINUX_FRW_SPI_INTERNAL_H_
 #define LIB_FRW_LINUX_FRW_SPI_INTERNAL_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 #define FRW_SPI_DEVICE_NAME_SIZE	512
 typedef struct{
 	int Loop;
@@ -29,5 +32,7 @@ typedef struct{
 }FRW_SPI_DEVICE;
 
 
-
+#ifdef __cplusplus
+}
+#endif
 #endif /* LIB_FRW_LINUX_FRW_SPI_INTERNAL_H_ */
