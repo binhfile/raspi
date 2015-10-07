@@ -34,7 +34,7 @@ STRIP=$(CROSS_COMPILE_ROOT)/bin/$(CROSS_COMPILE)strip
 #	CPPFLAGS+=-O2
 #	STRIP_CMD=$(PREFIX) $(STRIP) --strip-all $(APPNAME)	
 #endif
-PREFIX=
+PREFIX=@
 OBJS=
 
 INCLUDES+=-I$(PROJECT)/src
@@ -48,11 +48,14 @@ $(EXTRA_LIB)/src/lib_mem.o \
 $(EXTRA_LIB)/src/lib_debug.o \
 $(EXTRA_LIB)/src/lib_gpio.o \
 $(EXTRA_LIB)/src/lib_spi.o \
+$(EXTRA_LIB)/src/lib_sem.o \
+$(EXTRA_LIB)/src/lib_thread.o \
 $(EXTRA_LIB)/frw/linux/frw_debug_stdout.o \
 $(EXTRA_LIB)/frw/linux/frw_gpio_sysfs.o \
 $(EXTRA_LIB)/frw/linux/frw_mem.o \
 $(EXTRA_LIB)/frw/linux/frw_spi.o \
-$(EXTRA_LIB)/frw/linux/thread.o \
+$(EXTRA_LIB)/frw/linux/frw_sem.o \
+$(EXTRA_LIB)/frw/linux/frw_thread.o \
 $(EXTRA_LIB)/drivers/mrf24j40/mrf24j40.o
 
 #$(PREFIX) $(STRIP) --strip-all $(APPNAME)

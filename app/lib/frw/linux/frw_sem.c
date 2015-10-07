@@ -38,7 +38,7 @@ int frw_semPend(void* frw_sem, int timeout){
 	int s;
 
 	if(sem){
-		if(timeout == -1){
+		if(timeout == 0){
 			sem_wait(&sem->sem);
 			ret = 0;
 		}else{
@@ -55,12 +55,12 @@ int frw_semPend(void* frw_sem, int timeout){
 				while ((s = sem_timedwait(&sem->sem, &ts)) == -1 && errno == EINTR)
 					continue;       /* Restart if interrupted by handler */
 				if(s == 0){
-					ret = 0;
+					ret = 1;
 				}
 				else
 				{
 					if(errno == ETIMEDOUT)
-						ret = -1;
+						ret = 0;
 					else{
 						ret = -2;
 					}

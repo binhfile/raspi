@@ -18,7 +18,7 @@ extern int frw_semPost(void* frw_sem);
 void* lib_semAlloc(int value);
 int   lib_semFree(void* sem);
 #define lib_semPend(sem, timeout)		frw_semPend(((SEM_INTERNAL*)sem)->frw_sem, timeout)
-#define lib_semPost(sem, timeout)		frw_semPost(((SEM_INTERNAL*)sem)->frw_sem, timeout)
+#define lib_semPost(sem)				frw_semPost(((SEM_INTERNAL*)sem)->frw_sem)
 
 #ifdef __cplusplus
 }
