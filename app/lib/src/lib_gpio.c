@@ -23,7 +23,7 @@ int   	lib_gpioFreeDevice(void* dev){
 	int ret = -1;
 	if(_dev){
 		frw_gpioDestroy(_dev->frw_device);
-		lib_free(_dev);
+		lib_free(_dev, sizeof(GPIO_DEVICE_INTERNAL) - 1 + frw_gpioGetDeviceSize());
 		ret = 0;
 	}
 	return ret;

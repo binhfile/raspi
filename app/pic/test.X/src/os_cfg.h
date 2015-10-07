@@ -91,7 +91,7 @@
 #define OS_SEM_ACCEPT_EN          1    /*    Include code for OSSemAccept()                            */
 #define OS_SEM_DEL_EN             1    /*    Include code for OSSemDel()                               */
 #define OS_SEM_QUERY_EN           1    /*    Include code for OSSemQuery()                             */
-#define OS_SEM_PEND_ABORT_EN      1
+#define OS_SEM_PEND_ABORT_EN      0
 #define OS_SEM_SET_EN             0
 
                                        /* --------------------- TASK MANAGEMENT ---------------------- */

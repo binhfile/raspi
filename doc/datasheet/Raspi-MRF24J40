@@ -1,0 +1,7 @@
+/dev/spidev0.0
+#RESET 	<-- GPIO18
+INT 	--> GPIO23
+
+/dev/spidev0.1
+#RESET 	<-- GPIO24
+INT 	--> GPIO25

@@ -142,9 +142,8 @@ void OSTaskSwHook (void)
 	// Clear watch dog timer on context switches.  If enabled, the processor
 	// will reset if this does not get called (application frozen).
 //_asm
-//	CLRWDT
+	asm("CLRWDT");
 //_endasm
-asm("CLRWDT");
 }
 
 /*
@@ -315,8 +314,8 @@ void OSStartHighRdy (void)
     // Get the stack pointer of the task to resume.
     //  Stack Pointer = OSTCBHighRdy->OSTCBStkPtr;
 //_asm
-     asm("MOVFF   OSTCBHighRdy,   FSR0L");   // load the STCBHighRdy->OSTCBStkPtr into the free indirect register
-     asm("MOVFF   OSTCBHighRdy+1, FSR0H");
+     asm("MOVFF   _OSTCBHighRdy,   FSR0L");   // load the STCBHighRdy->OSTCBStkPtr into the free indirect register
+     asm("MOVFF   _OSTCBHighRdy+1, FSR0H");
      asm("MOVFF   POSTINC0,   FSR1L");       // copy the variable into the stack pointer
      asm("MOVFF   POSTDEC0,   FSR1H");
 //_endasm
@@ -333,29 +332,29 @@ void OSStartHighRdy (void)
 
     // restore the hardware return stack
 //_asm
-     asm("MOVF    POSTDEC1,   1,  0");       // decrement one to set it on the first item
-     asm("MOVF    POSTDEC1,   0,  0");       // number of function pointers in hardware return stack
-     asm("MOVWF   FSR0L,  0");               // user FSR0 as a temperary counter
+     asm("MOVF    POSTDEC1, f");       // decrement one to set it on the first item
+     asm("MOVF    POSTDEC1, w");       // number of function pointers in hardware return stack
+     asm("MOVF    FSR0L, w");               // user FSR0 as a temperary counter
 //_endasm
     do
     {
 //    _asm
          asm("PUSH            ");                // push current address onto hardware stack
-         asm("MOVF    POSTDEC1,   0,  0");       // then change to the function pointer in stack
-         asm("MOVWF   TOSU,   0");
-         asm("MOVF    POSTDEC1,   0,  0");
-         asm("MOVWF   TOSH,   0");
-         asm("MOVF    POSTDEC1,   0,  0");
-         asm("MOVWF   TOSL,   0");
+         asm("MOVF    POSTDEC1, w");       // then change to the function pointer in stack
+         asm("MOVWF   TOSU");
+         asm("MOVF    POSTDEC1, w");
+         asm("MOVWF   TOSH");
+         asm("MOVF    POSTDEC1, w");
+         asm("MOVWF   TOSL");
 //    _endasm
     } while(--FSR0L);               // decrement counter and loop if not finished
 
     // restore all processor registers from the new task's stack:
 //_asm
-     asm("MOVFF   POSTDEC1,   AARGB0");
-     asm("MOVFF   POSTDEC1,   AARGB1");
-     asm("MOVFF   POSTDEC1,   AARGB2");
-     asm("MOVFF   POSTDEC1,   AARGB3");
+//     asm("MOVFF   POSTDEC1,   AARGB0");
+//     asm("MOVFF   POSTDEC1,   AARGB1");
+//     asm("MOVFF   POSTDEC1,   AARGB2");
+//     asm("MOVFF   POSTDEC1,   AARGB3");
      asm("MOVFF   POSTDEC1,   PRODH");
      asm("MOVFF   POSTDEC1,   PRODL");
      asm("MOVFF   POSTDEC1,   TBLPTRU");
@@ -363,17 +362,17 @@ void OSStartHighRdy (void)
      asm("MOVFF   POSTDEC1,   TBLPTRL");
      asm("MOVFF   POSTDEC1,   FSR2H");
      asm("MOVFF   INDF1,      FSR2L");
-     asm("MOVF    POSTDEC1,   1,  0");
+     asm("MOVF    POSTDEC1, f");
      asm("MOVFF   POSTDEC1,   FSR0H");
      asm("MOVFF   POSTDEC1,   FSR0L");
-     asm("MOVF    POSTDEC1,   0,  0");
+     asm("MOVF    POSTDEC1, w");
      asm("MOVFF   POSTDEC1,   BSR");
      asm("MOVFF   POSTDEC1,   STATUS");
 //_endasm
 
     // execute a return from interrupt instruction
 //_asm
-     asm("RETFIE 0");
+//     asm("RETFIE");
 //_endasm
 }
 
@@ -435,10 +434,10 @@ void  OSCtxSw (void)
 //_asm
     asm("MOVFF   STATUS, PREINC1");
     asm("MOVFF   BSR,    PREINC1");
-    asm("MOVWF   PREINC1,    0");
+    asm("MOVWF   PREINC1, w");
     asm("MOVFF   FSR0L,  PREINC1");
     asm("MOVFF   FSR0H,  PREINC1");
-    asm("MOVF    POSTINC1,   1,  0");
+    asm("MOVF    POSTINC1, f");
     asm("MOVFF   FSR2L,  POSTINC1");
     asm("MOVFF   FSR2H,  POSTINC1");
     asm("MOVFF   TBLPTRL,POSTINC1");
@@ -446,11 +445,12 @@ void  OSCtxSw (void)
     asm("MOVFF   TBLPTRU,POSTINC1");
     asm("MOVFF   PRODL,  POSTINC1");
     asm("MOVFF   PRODH,  POSTINC1");
-    asm("MOVFF   AARGB3, POSTINC1");
-    asm("MOVFF   AARGB2, POSTINC1");
-    asm("MOVFF   AARGB1, POSTINC1");
-    asm("MOVFF   AARGB0, POSTINC1");
+//    asm("MOVFF   AARGB3, POSTINC1");
+//    asm("MOVFF   AARGB2, POSTINC1");
+//    asm("MOVFF   AARGB1, POSTINC1");
+//    asm("MOVFF   AARGB0, POSTINC1");
 //_endasm
+
     // Save the current task's return address hardware stack
     FSR0L = 0;
     while(STKPTR & 0x1F)
@@ -473,8 +473,8 @@ void  OSCtxSw (void)
     // Save the current task's stack pointer into the current task's OS_TCB:
     //   OSTCBCur->OSTCBStkPtr = Stack Pointer;
 //_asm
-    asm("MOVFF   OSTCBCur,   FSR0L");       // load the OSTCBCur->OSTCBStkPtr into the free indirect register
-    asm("MOVFF   OSTCBCur+1, FSR0H");
+    asm("MOVFF   _OSTCBCur,   FSR0L");       // load the OSTCBCur->OSTCBStkPtr into the free indirect register
+    asm("MOVFF   _OSTCBCur+1, FSR0H");
     asm("MOVFF   FSR1L,      POSTINC0");    // copy the stack pointer into the variable
     asm("MOVFF   FSR1H,      POSTDEC0");
 //_endasm
@@ -488,36 +488,35 @@ void  OSCtxSw (void)
     // Get the stack pointer of the task to resume.
     //  Stack Pointer = OSTCBHighRdy->OSTCBStkPtr;
 //_asm
-    asm("MOVFF   OSTCBHighRdy,   FSR0L");   // load the STCBHighRdy->OSTCBStkPtr into the free indirect register
-    asm("MOVFF   OSTCBHighRdy+1, FSR0H");
+    asm("MOVFF   _OSTCBHighRdy,   FSR0L");   // load the STCBHighRdy->OSTCBStkPtr into the free indirect register
+    asm("MOVFF   _OSTCBHighRdy+1, FSR0H");
     asm("MOVFF   POSTINC0,   FSR1L");       // copy the variable into the stack pointer
     asm("MOVFF   POSTDEC0,   FSR1H");
 //_endasm
     // restore the hardware return stack
 //_asm
-    asm("MOVF    POSTDEC1,   1,  0");       // decrement stack pointer one to set it on the first item
-    asm("MOVF    POSTDEC1,   0,  0");       // number of function pointers in hardware return stack
-    asm("MOVWF   FSR0L,  0        ");       // user FSR0 as a temperary counter
+    asm("MOVF    POSTDEC1, f");       // decrement stack pointer one to set it on the first item
+    asm("MOVF    POSTDEC1, w");       // number of function pointers in hardware return stack
+    asm("MOVWF   FSR0L");       // user FSR0 as a temperary counter
 //_endasm
     do
     {
 //    _asm
         asm("PUSH                      ");      // push current address onto hardware stack
-        asm("MOVF    POSTDEC1,   0,  0");       // then change to the function pointer in stack
-        asm("MOVWF   TOSU,   0");
-        asm("MOVF    POSTDEC1,   0,  0");
-        asm("MOVWF   TOSH,   0");
-        asm("MOVF    POSTDEC1,   0,  0");
-        asm("MOVWF   TOSL,   0");
+        asm("MOVF    POSTDEC1, w");       // then change to the function pointer in stack
+        asm("MOVWF   TOSU");
+        asm("MOVF    POSTDEC1, w");
+        asm("MOVWF   TOSH");
+        asm("MOVF    POSTDEC1, w");
+        asm("MOVWF   TOSL");
 //    _endasm
     } while(--FSR0L);               // decrement counter and loop if not finished
-
     // restore all processor registers from the new task's stack:
 //_asm
-    asm("MOVFF   POSTDEC1,   AARGB0");
-    asm("MOVFF   POSTDEC1,   AARGB1");
-    asm("MOVFF   POSTDEC1,   AARGB2");
-    asm("MOVFF   POSTDEC1,   AARGB3");
+//    asm("MOVFF   POSTDEC1,   AARGB0");
+//    asm("MOVFF   POSTDEC1,   AARGB1");
+//    asm("MOVFF   POSTDEC1,   AARGB2");
+//    asm("MOVFF   POSTDEC1,   AARGB3");
     asm("MOVFF   POSTDEC1,   PRODH");
     asm("MOVFF   POSTDEC1,   PRODL");
     asm("MOVFF   POSTDEC1,   TBLPTRU");
@@ -525,16 +524,16 @@ void  OSCtxSw (void)
     asm("MOVFF   POSTDEC1,   TBLPTRL");
     asm("MOVFF   POSTDEC1,   FSR2H");
     asm("MOVFF   INDF1,      FSR2L");
-    asm("MOVF    POSTDEC1,   1,  0");
+    asm("MOVF    POSTDEC1, f");
     asm("MOVFF   POSTDEC1,   FSR0H");
     asm("MOVFF   POSTDEC1,   FSR0L");
-    asm("MOVF    POSTDEC1,   0,  0");
+    asm("MOVF    POSTDEC1, w");
     asm("MOVFF   POSTDEC1,   BSR");
     asm("MOVFF   POSTDEC1,   STATUS");
 //_endasm"
     // execute a return from interrupt instruction
 //_asm
-    asm("RETFIE 0");
+    asm("RETFIE");
 //_endasm
 }
 
@@ -558,11 +557,6 @@ void CPUlowInterrupt(void);
 //#pragma code highVector=0x008
 void interrupt CPUhighVector(void)
 {
-//_asm
-//	BTFSC RCON, 7, 0
-//	goto CPUhighInterruptHook
-//	goto CPUlowInterrupt
-//_endasm
         asm("BTFSC RCON, 7, 0");
         asm("goto _CPUhighInterruptHook");
         asm("goto _CPUlowInterrupt");
@@ -582,10 +576,10 @@ void CPUlowInterrupt(void)
 //_asm
     asm("MOVFF   STATUS, PREINC1");
     asm("MOVFF   BSR,    PREINC1");
-    asm("MOVWF   PREINC1");
+    asm("MOVWF   PREINC1, w");
     asm("MOVFF   FSR0L,  PREINC1");
     asm("MOVFF   FSR0H,  PREINC1");
-    asm("MOVF    POSTINC1");
+    asm("MOVF    POSTINC1, f");
     asm("MOVFF   FSR2L,  POSTINC1");
     asm("MOVFF   FSR2H,  POSTINC1");
     asm("MOVFF   TBLPTRL,POSTINC1");
@@ -609,7 +603,7 @@ void CPUlowInterrupt(void)
     // Call OSIntExit() to determine what task to switch to.
     OSIntExit();
 //_asm
-    asm("MOVF    POSTDEC1");       // decrement stack pointer one to set it on the first item
+    asm("MOVF    POSTDEC1, f");       // decrement stack pointer one to set it on the first item
 //_endasm
 
     // restore all processor registers from the new task's stack:
@@ -624,11 +618,11 @@ void CPUlowInterrupt(void)
     asm("MOVFF   POSTDEC1,   TBLPTRH");
     asm("MOVFF   POSTDEC1,   TBLPTRL");
     asm("MOVFF   POSTDEC1,   FSR2H");
-   asm(" MOVFF   INDF1,      FSR2L");
-    asm("MOVF    POSTDEC1");
+    asm("MOVFF   INDF1,      FSR2L");
+    asm("MOVF    POSTDEC1, f");
     asm("MOVFF   POSTDEC1,   FSR0H");
     asm("MOVFF   POSTDEC1,   FSR0L");
-   asm(" MOVF    POSTDEC1");
+    asm("MOVF    POSTDEC1, w");
     asm("MOVFF   POSTDEC1,   BSR");
     asm("MOVFF   POSTDEC1,   STATUS");
 //_endasm
@@ -735,9 +729,9 @@ void OSIntCtxSw (void)
 //_endasm
 #if OS_CRITICAL_METHOD == 3                      /* De-Allocate storage for CPU status register        */
 //_asm
-	asm("MOVF POSTDEC1");
-	asm("MOVF POSTDEC1");
-	asm("MOVF POSTDEC1");
+	asm("MOVF POSTDEC1, f");
+	asm("MOVF POSTDEC1, f");
+	asm("MOVF POSTDEC1, f");
 //_endasm
 #endif
 
@@ -795,19 +789,19 @@ void OSIntCtxSw (void)
 
     // restore the hardware return stack
 //_asm
-    asm("MOVF    POSTDEC1 ");      // decrement stack pointer one to set it on the first item
-    asm("MOVF    POSTDEC1");       // number of function pointers in hardware return stack
+    asm("MOVF    POSTDEC1,  f ");      // decrement stack pointer one to set it on the first item
+    asm("MOVF    POSTDEC1,  w");       // number of function pointers in hardware return stack
     asm("MOVWF   FSR0L");     // user FSR0 as a temperary counter
 //_endasm
     do
     {
 //    _asm
         asm("PUSH      ");                      // push current address onto hardware stack
-        asm("MOVF    POSTDEC1");     // then change to the function pointer in stack
+        asm("MOVF    POSTDEC1, w");     // then change to the function pointer in stack
         asm("MOVWF   TOSU");
-        asm("MOVF    POSTDEC1");
+        asm("MOVF    POSTDEC1, w");
         asm("MOVWF   TOSH");
-        asm("MOVF    POSTDEC1");
+        asm("MOVF    POSTDEC1, w");
         asm("MOVWF   TOSL");
 //    _endasm
     } while(--FSR0L);               // decrement counter and loop if not finished
@@ -825,10 +819,10 @@ void OSIntCtxSw (void)
     asm("MOVFF   POSTDEC1,   TBLPTRL");
     asm("MOVFF   POSTDEC1,   FSR2H");
     asm("MOVFF   INDF1,      FSR2L");
-    asm("MOVF    POSTDEC1");
+    asm("MOVF    POSTDEC1, f");
     asm("MOVFF   POSTDEC1,   FSR0H");
     asm("MOVFF   POSTDEC1,   FSR0L");
-    asm("MOVF    POSTDEC1");
+    asm("MOVF    POSTDEC1, w");
     asm("MOVFF   POSTDEC1,   BSR");
     asm("MOVFF   POSTDEC1,   STATUS");
 //_endasm
