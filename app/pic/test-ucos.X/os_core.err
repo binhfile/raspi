@@ -1,0 +1,2 @@
+Warning[2058] ucos/os_core.c 683 : call of function without prototype
+Warning[2058] ucos/os_core.c 828 : call of function without prototype
