@@ -109,26 +109,41 @@ int mrf24j40_initDevice(void* dev){
 	mrf24j40_softReset(dev);
 	_mrf24j40_writeShort(dev, MRF_RXFLUSH, 0x01);
 
-    _mrf24j40_writeLongReg(dev, MRF_RFCON0, 0x03); // – Initialize RFOPT = 0x03.
-    _mrf24j40_writeLongReg(dev, MRF_RFCON1, 0x02); // – Initialize VCOOPT = 0x02.
-    _mrf24j40_writeLongReg(dev, MRF_RFCON2, 0x80); // – Enable PLL (PLLEN = 1).
-    _mrf24j40_writeLongReg(dev, MRF_RFCON3, 0x00); //
-    _mrf24j40_writeLongReg(dev, MRF_RFCON6, 0x90); // – Initialize TXFIL = 1 and 20MRECVR = 1.
-    _mrf24j40_writeLongReg(dev, MRF_RFCON7, 0x80); // – Initialize SLPCLKSEL = 0x2 (100 kHz Internal oscillator).
-    _mrf24j40_writeLongReg(dev, MRF_RFCON8, 0x10); // – Initialize RFVCO = 1.
-    _mrf24j40_writeLongReg(dev, MRF_SLPCON1, 0x21);
+    _mrf24j40_writeLongReg(dev, MRF_RFCON0, 0x03); // recommended from datasheet
+    _mrf24j40_writeLongReg(dev, MRF_RFCON1, 0x02); // recommended from datasheet
+    _mrf24j40_writeLongReg(dev, MRF_RFCON2, 0x80); // Enable PLL
+    _mrf24j40_writeLongReg(dev, MRF_RFCON3, 0x00); // TX Power = 0dB
+    /** TX Filter Control enable
+     *  Recovery from Sleep less than 1ms
+     *  Battery Minitor disable
+     */ 
+    _mrf24j40_writeLongReg(dev, MRF_RFCON6, 0x90);
+    _mrf24j40_writeLongReg(dev, MRF_RFCON7, 0x80); // Sleep clock use 100kHz internal osc
+    _mrf24j40_writeLongReg(dev, MRF_RFCON8, 0x10); // VCO Control, recommended from datasheet
+    /** CLKOUT pin disable
+     *  Sleep clock divided = 2^1
+     */ 
+    _mrf24j40_writeLongReg(dev, MRF_SLPCON1, 0x01);
 
     //  Configuration for nonbeacon-enabled devices (see Section 3.8 “Beacon-Enabled and
     //  Nonbeacon-Enabled Networks”):
-    _mrf24j40_writeShortReg(dev, MRF_BBREG2, 0x80); // Set CCA mode to ED
-    _mrf24j40_writeShortReg(dev, MRF_CCAEDTH, 0x60); // – Set CCA ED threshold.
+    /** Carrier sense only
+     *  CCA-CS recommended
+     */ 
+    _mrf24j40_writeShortReg(dev, MRF_BBREG2, 0x78);
+    /** Energy detection threshold for CCA, recommended
+     */ 
+    _mrf24j40_writeShortReg(dev, MRF_CCAEDTH, 0x60);
     _mrf24j40_writeShort(dev, MRF_BBREG6, 0x40); // – Set appended RSSI value to RXFIFO.
+    /** FIFO enable
+     *  
+     */ 
     _mrf24j40_writeShortReg(dev, MRF_PACON2, 0x98);
-    _mrf24j40_writeShortReg(dev, MRF_TXSTBL, 0x95);
+    _mrf24j40_writeShortReg(dev, MRF_TXSTBL, 0x95); // recommended
     do{
     	val = _mrf24j40_readLong(dev, MRF_RFSTATE);
     	lib_sleepMs(50);
-    }while((val & 0xA0) != 0xA0);
+    }while((val & 0xA0) != 0xA0);// wait RX state
     mrf24j40_initInterrupt(dev);
     _mrf24j40_writeLongReg(dev, MRF_RFCON0, 0x03);
     _mrf24j40_writeLongReg(dev, MRF_RFCON1, 0x02);
@@ -136,8 +151,8 @@ int mrf24j40_initDevice(void* dev){
     mrf24j40_setChannel(dev, 11);
     // max power is by default.. just leave it...
     // Set transmitter power - See “REGISTER 2-62: RF CONTROL 3 REGISTER (ADDRESS: 0x203)”.
-    _mrf24j40_writeShortReg(dev, MRF_RFCTL, 0x04); //  – Reset RF state machine.
-    _mrf24j40_writeShortReg(dev, MRF_RFCTL, 0x00); // part 2
+    _mrf24j40_writeShortReg(dev, MRF_RFCTL, 0x04); //  reset RF state machine
+    _mrf24j40_writeShortReg(dev, MRF_RFCTL, 0x00); //  out of reset
     lib_sleepMs(10); // delay at least 192usec
 	return 0;
 }
@@ -198,26 +213,21 @@ int mrf24j40_setCallback(void* dev, MRF24J40_CALLBACK fxn, void* obj){
 	}
 	return 0;
 }
-void _mrf24j40_writeShort(void* dev, unsigned char address, unsigned char data){
-	unsigned char tx[2];
-	unsigned char rx[2];
-	MRF24J40* _dev = (MRF24J40*)dev;
-	if(_dev)
-	{
-		tx[0] = (address << 1 & 0b01111110) | 0x01;
-		tx[1] = data;
-		lib_spiTransfer(_dev->cmd, tx, rx, 2);
-	}
+inline void _mrf24j40_writeShort(void* dev, unsigned char address, unsigned char data){
+	static unsigned char tx[2];
+	static unsigned char rx[2];
+	tx[0] = ((address << 1) & 0b01111110) | 0x01;
+	tx[1] = data;
+	lib_spiTransfer(((MRF24J40*)dev)->cmd, tx, rx, 2);
 }
-void _mrf24j40_writeLong(void* dev, unsigned short address, unsigned char data){
-	unsigned char tx[3];
-	unsigned char rx[3];
-	MRF24J40* _dev = (MRF24J40*)dev;
+inline void _mrf24j40_writeLong(void* dev, unsigned short address, unsigned char data){
+	static unsigned char tx[3];
+	static unsigned char rx[3];
 
 	tx[0] = 0x80 | (address >> 3);
 	tx[1] = 0x10 | (address << 5);
 	tx[2] = data;
-	lib_spiTransfer(_dev->cmd, tx, rx, 3);
+	lib_spiTransfer(((MRF24J40*)dev)->cmd, tx, rx, 3);
 }
 unsigned char _mrf24j40_readShort(void* dev, unsigned char address){
 	unsigned char tx[2];
