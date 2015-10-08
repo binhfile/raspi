@@ -8,8 +8,8 @@
 #ifndef LIB_INCLUDE_LIB_MEM_H_
 #define LIB_INCLUDE_LIB_MEM_H_
 
-inline void* lib_alloc(int length);
-inline int   lib_free(void* mem, int length);
+void* lib_alloc(int length);
+int   lib_free(void* mem, int length);
 
 
 

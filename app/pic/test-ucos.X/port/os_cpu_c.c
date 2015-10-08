@@ -74,10 +74,10 @@ OS_STK *OSTaskStkInit (void (*task)(void *pd), void *pdata, OS_STK *ptos, INT16U
     *stk++  = 0x2D;                     // TBLPTRU Prog Mem Table Pointer Low
     *stk++  = 0x2E;                     // PRODL Product Reg high
     *stk++  = 0x2F;                     // PRODH Product Reg low
-//    *stk++  = 0x3A;						// AARGB3
-//    *stk++  = 0x3B;						// AARGB2
-//    *stk++  = 0x3C;						// AARGB1
-//    *stk++  = 0x3D;						// AARGB0
+    *stk++  = 0x3A;						// AARGB3
+    *stk++  = 0x3B;						// AARGB2
+    *stk++  = 0x3C;						// AARGB1
+    *stk++  = 0x3D;						// AARGB0
 
     // first return address, the task address, goes on the hardware return stack in a context switch
     *stk++  = (OS_STK)*(((INT8U*)&task));   // TOSL - Top of stack - Lower bits
@@ -445,10 +445,10 @@ _asm
     MOVFF   TBLPTRU,POSTINC1
     MOVFF   PRODL,  POSTINC1
     MOVFF   PRODH,  POSTINC1
-//    MOVFF   AARGB3, POSTINC1
-//    MOVFF   AARGB2, POSTINC1
-//    MOVFF   AARGB1, POSTINC1
-//    MOVFF   AARGB0, POSTINC1
+    MOVFF   __AARGB3, POSTINC1
+    MOVFF   __AARGB2, POSTINC1
+    MOVFF   __AARGB1, POSTINC1
+    MOVFF   __AARGB0, POSTINC1
 _endasm
 
     // Save the current task's return address hardware stack
@@ -516,10 +516,10 @@ _endasm
 
     // restore all processor registers from the new task's stack:
 _asm
-//    MOVFF   POSTDEC1,   __AARGB0
-//    MOVFF   POSTDEC1,   __AARGB1
-//    MOVFF   POSTDEC1,   __AARGB2
-//    MOVFF   POSTDEC1,   __AARGB3
+    MOVFF   POSTDEC1,   __AARGB0
+    MOVFF   POSTDEC1,   __AARGB1
+    MOVFF   POSTDEC1,   __AARGB2
+    MOVFF   POSTDEC1,   __AARGB3
     MOVFF   POSTDEC1,   PRODH
     MOVFF   POSTDEC1,   PRODL
     MOVFF   POSTDEC1,   TBLPTRU
@@ -592,10 +592,10 @@ _asm
     MOVFF   TBLPTRU,POSTINC1
     MOVFF   PRODL,  POSTINC1
     MOVFF   PRODH,  POSTINC1
-//    MOVFF   AARGB3, POSTINC1
-//    MOVFF   AARGB2, POSTINC1
-//    MOVFF   AARGB1, POSTINC1
-//    MOVFF   AARGB0, POSTINC1
+    MOVFF   __AARGB3, POSTINC1
+    MOVFF   __AARGB2, POSTINC1
+    MOVFF   __AARGB1, POSTINC1
+    MOVFF   __AARGB0, POSTINC1
 _endasm
 
     // Notify kernel about interrupt by incrementing OSIntNesting or by calling OSIntEnter()
@@ -613,10 +613,10 @@ _endasm
 
     // restore all processor registers from the new task's stack:
 _asm
-//    MOVFF   POSTDEC1,   __AARGB0
-//    MOVFF   POSTDEC1,   __AARGB1
-//    MOVFF   POSTDEC1,   __AARGB2
-//    MOVFF   POSTDEC1,   __AARGB3
+    MOVFF   POSTDEC1,   __AARGB0
+    MOVFF   POSTDEC1,   __AARGB1
+    MOVFF   POSTDEC1,   __AARGB2
+    MOVFF   POSTDEC1,   __AARGB3
     MOVFF   POSTDEC1,   PRODH
     MOVFF   POSTDEC1,   PRODL
     MOVFF   POSTDEC1,   TBLPTRU
@@ -817,10 +817,10 @@ _endasm
 
     // restore all processor registers from the new task's stack:
 _asm
-//    MOVFF   POSTDEC1,   AARGB0
-//    MOVFF   POSTDEC1,   AARGB1
-//    MOVFF   POSTDEC1,   AARGB2
-//    MOVFF   POSTDEC1,   AARGB3
+    MOVFF   POSTDEC1,   __AARGB0
+    MOVFF   POSTDEC1,   __AARGB1
+    MOVFF   POSTDEC1,   __AARGB2
+    MOVFF   POSTDEC1,   __AARGB3
     MOVFF   POSTDEC1,   PRODH
     MOVFF   POSTDEC1,   PRODL
     MOVFF   POSTDEC1,   TBLPTRU

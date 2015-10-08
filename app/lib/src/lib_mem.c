@@ -9,10 +9,10 @@
 extern void* frw_alloc(int length);
 extern int   frw_free(void* mem, int length);
 
-inline void* lib_alloc(int length){
+void* lib_alloc(int length){
 	return frw_alloc(length);
 }
-inline int   lib_free(void* mem, int length){
+int   lib_free(void* mem, int length){
 	return frw_free(mem, length);
 }
 

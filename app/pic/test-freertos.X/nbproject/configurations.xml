@@ -4,72 +4,58 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>port/app_cfg.h</itemPath>
-      <itemPath>port/os_cfg.h</itemPath>
-      <itemPath>port/os_cpu.h</itemPath>
-      <itemPath>ucos/os_cfg_r.h</itemPath>
-      <itemPath>ucos/ucos_ii.h</itemPath>
-    </logicalFolder>
-    <logicalFolder name="f1" displayName="lib" projectFiles="true">
-      <logicalFolder name="f2" displayName="frw" projectFiles="true">
-        <itemPath>../../lib/frw/pic/frw_gpio.c</itemPath>
-        <itemPath>../../lib/frw/pic/frw_gpio_internal.h</itemPath>
-        <itemPath>../../lib/frw/pic/frw_mem.c</itemPath>
+      <logicalFolder name="f2" displayName="rtos" projectFiles="true">
+        <itemPath>../FreeRTOS/Source/include/FreeRTOS.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/StackMacros.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/croutine.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/deprecated_definitions.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/event_groups.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/list.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/mpu_wrappers.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/portable.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/projdefs.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/queue.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/semphr.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/task.h</itemPath>
+        <itemPath>../FreeRTOS/Source/include/timers.h</itemPath>
+        <itemPath>../FreeRTOS/Source/portable/MPLAB/PIC18F/portmacro.h</itemPath>
+        <itemPath>../FreeRTOS/Source/portable/MPLAB/PIC18F/stdio.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f1" displayName="hwl" projectFiles="true">
-        <itemPath>../../lib/hwl/pic18f46k20/hwl_gpio.c</itemPath>
-        <itemPath>../../lib/hwl/pic18f46k20/hwl_gpio.h</itemPath>
+      <logicalFolder name="f1" displayName="src" projectFiles="true">
+        <itemPath>src/FreeRTOSConfig.h</itemPath>
+        <itemPath>src/serial.h</itemPath>
+        <itemPath>src/stdint.h</itemPath>
       </logicalFolder>
-      <itemPath>../../lib/include/lib_debug.h</itemPath>
-      <itemPath>../../lib/include/lib_gpio.h</itemPath>
-      <itemPath>../../lib/include/lib_mem.h</itemPath>
-      <itemPath>../../lib/include/lib_sem.h</itemPath>
-      <itemPath>../../lib/include/lib_spi.h</itemPath>
-      <itemPath>../../lib/include/lib_thread.h</itemPath>
-      <itemPath>../../lib/src/lib_gpio.c</itemPath>
-      <itemPath>../../lib/src/lib_mem.c</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
                    projectFiles="true">
-      <itemPath>uc-18f46k20.lkr</itemPath>
-    </logicalFolder>
-    <logicalFolder name="port" displayName="port" projectFiles="true">
-      <itemPath>port/os_cpu_c.c</itemPath>
-      <itemPath>port/vector.c</itemPath>
+      <itemPath>src/18f46k20.lkr</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-    </logicalFolder>
-    <logicalFolder name="ucos" displayName="ucos" projectFiles="true">
-      <itemPath>ucos/os_core.c</itemPath>
-      <itemPath>ucos/os_sem.c</itemPath>
-      <itemPath>ucos/os_flag.c</itemPath>
-      <itemPath>ucos/os_time.c</itemPath>
-      <itemPath>ucos/os_mem.c</itemPath>
-      <itemPath>ucos/os_mbox.c</itemPath>
-      <itemPath>ucos/os_q.c</itemPath>
-      <itemPath>ucos/os_task.c</itemPath>
-      <itemPath>ucos/os_dbg_r.c</itemPath>
-      <itemPath>ucos/os_mutex.c</itemPath>
-      <itemPath>ucos/ucos_ii.c</itemPath>
-      <itemPath>ucos/os_tmr.c</itemPath>
+      <logicalFolder name="f1" displayName="rtos" projectFiles="true">
+        <itemPath>../FreeRTOS/Source/portable/MemMang/heap_1.c</itemPath>
+        <itemPath>../FreeRTOS/Source/portable/MPLAB/PIC18F/port.c</itemPath>
+        <itemPath>../FreeRTOS/Source/list.c</itemPath>
+        <itemPath>../FreeRTOS/Source/queue.c</itemPath>
+        <itemPath>../FreeRTOS/Source/tasks.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="src" displayName="src" projectFiles="true">
+        <itemPath>src/main.c</itemPath>
+        <itemPath>src/serial.c</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <itemPath>main.c</itemPath>
   </logicalFolder>
   <sourceRootList>
-    <Elem>ucos</Elem>
-    <Elem>port</Elem>
-    <Elem>../../lib/include</Elem>
-    <Elem>../../lib/src</Elem>
-    <Elem>../../lib/frw/pic</Elem>
-    <Elem>../../lib/hwl/pic18f46k20</Elem>
+    <Elem>src</Elem>
+    <Elem>../FreeRTOS/Source</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -124,7 +110,8 @@
         <property key="enable-ot" value="true"/>
         <property key="enable-ou" value="true"/>
         <property key="enable-ow" value="true"/>
-        <property key="extra-include-directories" value="ucos;port;../../lib/include"/>
+        <property key="extra-include-directories"
+                  value="../FreeRTOS/Source/include;../FreeRTOS/Source/portable/MPLAB/PIC18F;src"/>
         <property key="optimization-master" value="Enable all"/>
         <property key="preprocessor-macros" value=""/>
         <property key="procedural-abstraction-passes" value="4"/>
@@ -147,6 +134,71 @@
         <property key="stack-analysis-mcc18" value="false"/>
         <property key="stack-analysis-mplink" value="false"/>
       </C18LanguageToolchain>
+      <HI-TECH-COMP>
+        <property key="asmlist" value="true"/>
+        <property key="define-macros" value=""/>
+        <property key="extra-include-directories"
+                  value="src;../FreeRTOS/Source/include;../FreeRTOS/Source/portable/MPLAB/PIC18F"/>
+        <property key="identifier-length" value="255"/>
+        <property key="operation-mode" value="free"/>
+        <property key="opt-xc8-compiler-strict_ansi" value="false"/>
+        <property key="optimization-assembler" value="true"/>
+        <property key="optimization-assembler-files" value="true"/>
+        <property key="optimization-debug" value="false"/>
+        <property key="optimization-global" value="true"/>
+        <property key="optimization-invariant-enable" value="false"/>
+        <property key="optimization-invariant-value" value="16"/>
+        <property key="optimization-level" value="9"/>
+        <property key="optimization-set" value="default"/>
+        <property key="optimization-speed" value="false"/>
+        <property key="preprocess-assembler" value="true"/>
+        <property key="undefine-macros" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="verbose" value="false"/>
+        <property key="warning-level" value="0"/>
+        <property key="what-to-do" value="ignore"/>
+      </HI-TECH-COMP>
+      <HI-TECH-LINK>
+        <property key="additional-options-checksum" value=""/>
+        <property key="additional-options-code-offset" value=""/>
+        <property key="additional-options-command-line" value=""/>
+        <property key="additional-options-errata" value=""/>
+        <property key="additional-options-extend-address" value="false"/>
+        <property key="additional-options-trace-type" value=""/>
+        <property key="additional-options-use-response-files" value="false"/>
+        <property key="backup-reset-condition-flags" value="false"/>
+        <property key="calibrate-oscillator" value="false"/>
+        <property key="calibrate-oscillator-value" value="0x3400"/>
+        <property key="clear-bss" value="true"/>
+        <property key="code-model-external" value="wordwrite"/>
+        <property key="code-model-rom" value=""/>
+        <property key="create-html-files" value="false"/>
+        <property key="data-model-ram" value=""/>
+        <property key="data-model-size-of-double" value="24"/>
+        <property key="data-model-size-of-float" value="24"/>
+        <property key="display-class-usage" value="false"/>
+        <property key="display-hex-usage" value="false"/>
+        <property key="display-overall-usage" value="true"/>
+        <property key="display-psect-usage" value="false"/>
+        <property key="fill-flash-options-addr" value=""/>
+        <property key="fill-flash-options-const" value=""/>
+        <property key="fill-flash-options-how" value="0"/>
+        <property key="fill-flash-options-inc-const" value="1"/>
+        <property key="fill-flash-options-increment" value=""/>
+        <property key="fill-flash-options-seq" value=""/>
+        <property key="fill-flash-options-what" value="0"/>
+        <property key="format-hex-file-for-download" value="false"/>
+        <property key="initialize-data" value="true"/>
+        <property key="keep-generated-startup.as" value="false"/>
+        <property key="link-in-c-library" value="true"/>
+        <property key="link-in-peripheral-library" value="true"/>
+        <property key="managed-stack" value="false"/>
+        <property key="opt-xc8-linker-file" value="false"/>
+        <property key="opt-xc8-linker-link_startup" value="false"/>
+        <property key="opt-xc8-linker-serial" value=""/>
+        <property key="program-the-device-with-default-config-words" value="true"/>
+      </HI-TECH-LINK>
       <PICkit3PlatformTool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="Freeze Peripherals" value="true"/>
@@ -154,7 +206,6 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -165,7 +216,7 @@
         <property key="memories.flashdata" value="true"/>
         <property key="memories.id" value="true"/>
         <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.end" value="0x7fff"/>
+        <property key="memories.programmemory.end" value="0xffff"/>
         <property key="memories.programmemory.partition2" value="true"/>
         <property key="memories.programmemory.partition2.end"
                   value="${memories.programmemory.partition2.end.value}"/>
@@ -180,16 +231,24 @@
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveprogramrange" value="false"/>
-        <property key="programoptions.preserveprogramrange.end" value="0x7fff"/>
+        <property key="programoptions.preserveprogramrange.end" value="0xffff"/>
         <property key="programoptions.preserveprogramrange.start" value="0x0"/>
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
-        <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
+        <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
         <property key="programoptions.usehighvoltageonmclr" value="false"/>
         <property key="programoptions.uselvpprogramming" value="false"/>
-        <property key="voltagevalue" value="1.875"/>
+        <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
+      <XC8-config-global>
+        <property key="advanced-elf" value="true"/>
+        <property key="output-file-format" value="-mcof,+elf"/>
+        <property key="stack-size-high" value="auto"/>
+        <property key="stack-size-low" value="auto"/>
+        <property key="stack-size-main" value="auto"/>
+        <property key="stack-type" value="compiled"/>
+      </XC8-config-global>
     </conf>
   </confs>
 </configurationDescriptor>
