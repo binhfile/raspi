@@ -15,6 +15,7 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 
+int FRW_SPI_NAME_LEN = 128;
 inline int frw_spiGetDeviceSize(){
 	return sizeof(FRW_SPI_DEVICE);
 }
