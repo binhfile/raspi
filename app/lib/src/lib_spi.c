@@ -24,7 +24,7 @@ int   lib_spiFreeDevice(void* dev){
 	int ret = -1;
 	if(_dev){
 		lib_spiCloseDevice(_dev);
-		lib_free(_dev);
+		lib_free(_dev, sizeof(SPI_DEVICE_INTERNAL));
 		ret = 0;
 	}
 	return ret;

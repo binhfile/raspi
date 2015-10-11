@@ -1,9 +1,9 @@
 /* Scheduler include files. */
+#define USE_AND_MASKS
 #include "FreeRTOS.h"
 #include "task.h"
-#if defined(__XC8__)
-#include <xc.h>
-#endif
+#include <usart.h> 
+#include "cfg.h"
 // CONFIG1H
 #pragma config FOSC = HS        // Oscillator Selection bits (HS oscillator)
 #pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
@@ -86,9 +86,23 @@ static void vTask2( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* Creates the tasks, then starts the scheduler. */
+static char szBuffer[32] = {'a', 'b'};
+const char rom versionString[] = "hello\r\n";
 void main( void )
-{
+{ 
+    strcmppgm2ram(szBuffer, versionString);
+//    szBuffer[0] = 'x';
+    
+    OSCTUNEbits.PLLEN = 0;
+    ANSELH = 0x00;
+    ANSEL = 0x00;
+    TXSTA       = 0x24;
+    RCSTA       = 0x90;
+    BAUDCON     = 0x00;
+    SPBRG       = 0xA2;
+    
 	vPortInitialiseBlocks();
+//    xSerialPortInitMinimal(9600, 5);
 
 	/* Start the check task defined in this file. */
 	xTaskCreate( vTask1, "Task 1", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -96,15 +110,23 @@ void main( void )
 
 	/* Start the scheduler.  Will never return here. */
 	vTaskStartScheduler();
+//    vTask2(0);
+}
+
+static void pushString(int len)
+{
+//    int i;
+//    for(i = 0; i < len; i++){
+        TXREG = szBuffer[0];
+//        while(!TXSTAbits.TRMT){ Nop();}
+//    }
 }
 /*-----------------------------------------------------------*/
-
 static void vTask1( void *pvParameters )
 {
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error. */
     int i, j;
-    ANSELH = 0x00;
     TRISB = 0;
     LATB = 0;
 	for( ;; )
@@ -135,16 +157,27 @@ static void vTask1( void *pvParameters )
         }
 	}
 }
+
 static void vTask2( void *pvParameters )
 {
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error. */
     int i, j;
+             int len;
+   
     ANSELH = 0x00;
     TRISB = 0;
     LATB = 0;
+    len = 7;
+    
+//    strcmppgm2ram(szBuffer, "hello\r\n");
 	for( ;; )
 	{
+//        xSerialPutChar(0, tx, mainNO_BLOCK);
+        
+            pushString(7);
+       
+        
         LATB = LATB & (~(0x01 << 1));
         for(i = 0 ;  i < 1000; i++){
             for(j = 0; j < 50; j++){

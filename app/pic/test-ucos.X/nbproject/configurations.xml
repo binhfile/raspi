@@ -12,9 +12,9 @@
     </logicalFolder>
     <logicalFolder name="f1" displayName="lib" projectFiles="true">
       <logicalFolder name="f2" displayName="frw" projectFiles="true">
-        <itemPath>../../lib/frw/pic/frw_gpio.c</itemPath>
-        <itemPath>../../lib/frw/pic/frw_gpio_internal.h</itemPath>
-        <itemPath>../../lib/frw/pic/frw_mem.c</itemPath>
+        <itemPath>../../lib/frw/ucos/frw_gpio.c</itemPath>
+        <itemPath>../../lib/frw/ucos/frw_gpio_internal.h</itemPath>
+        <itemPath>../../lib/frw/ucos/frw_mem.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="hwl" projectFiles="true">
         <itemPath>../../lib/hwl/pic18f46k20/hwl_gpio.c</itemPath>
@@ -70,6 +70,7 @@
     <Elem>../../lib/src</Elem>
     <Elem>../../lib/frw/pic</Elem>
     <Elem>../../lib/hwl/pic18f46k20</Elem>
+    <Elem>../../lib/frw/ucos</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

@@ -22,6 +22,7 @@ extern int frw_spiSetCSHigh(void* frm_dev, int set);
 extern int frw_spiSetDelayDeactiveCS(void* frm_dev, int delay);
 extern int frw_spiSetSpeed(void* frm_dev, int speed);
 extern int frw_spiSetBitWord(void* frm_dev, int bitPerWord);
+extern int FRW_SPI_NAME_LEN;
 
 
 void* 	lib_spiAllocDevice();

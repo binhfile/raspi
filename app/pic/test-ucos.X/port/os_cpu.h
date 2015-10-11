@@ -14,7 +14,8 @@
 * By   : Nathan Brown
 *********************************************************************************************************
 */
-#include <p18f46k20.h>
+#define TRUE (1)
+#define FAILED (0)
 // Interrupt handling - define in user code.
 void CPUlowInterruptHook(void);
 void CPUhighInterruptHook(void);
@@ -53,8 +54,7 @@ typedef INT8U          OS_CPU_SR;                /* Size of Processor Status Wor
 #define UWORD          INT16U
 #define LONG           INT32S
 #define ULONG          INT32U
-#define TRUE            (1)
-#define FAILED          (0)
+
 
 /*
 **********************************************************************************************************

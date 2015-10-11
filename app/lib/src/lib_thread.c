@@ -32,7 +32,7 @@ int lib_threadFree(void* thread){
 	int ret = -1;
 	if(th){
 		lib_threadStop(th, 100);
-		lib_free(th);
+		lib_free(th, sizeof(LIB_THREAD));
 		ret = 0;
 	}
 	return ret;

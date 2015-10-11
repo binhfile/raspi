@@ -25,6 +25,7 @@
 #define  OS_GLOBALS
 #include <ucos_ii.h>
 #endif
+
 /*
 *********************************************************************************************************
 *                                       PRIORITY RESOLUTION TABLE
@@ -33,7 +34,8 @@
 *       Indexed value corresponds to highest priority bit position (i.e. 0..7)
 *********************************************************************************************************
 */
-INT8U  const  OSUnMapTbl[256] = {
+
+rom INT8U  const  OSUnMapTbl[256] = {
     0u, 0u, 1u, 0u, 2u, 0u, 1u, 0u, 3u, 0u, 1u, 0u, 2u, 0u, 1u, 0u, /* 0x00 to 0x0F                   */
     4u, 0u, 1u, 0u, 2u, 0u, 1u, 0u, 3u, 0u, 1u, 0u, 2u, 0u, 1u, 0u, /* 0x10 to 0x1F                   */
     5u, 0u, 1u, 0u, 2u, 0u, 1u, 0u, 3u, 0u, 1u, 0u, 2u, 0u, 1u, 0u, /* 0x20 to 0x2F                   */

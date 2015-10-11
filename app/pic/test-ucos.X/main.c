@@ -4,12 +4,13 @@
  *
  * Created on October 8, 2015, 9:28 AM
  */
-
+#define USE_AND_MASKS
 #include <stdio.h>
 #include <stdlib.h>
 #include <ucos_ii.h>
 #include <lib_gpio.h>
-
+#include <p18f46k20.h>
+#include <timers.h>
 // CONFIG1H
 #pragma config FOSC = HS        // Oscillator Selection bits (HS oscillator)
 #pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
@@ -67,8 +68,10 @@
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
 
 
-unsigned char g_memTank[128];
-unsigned int  g_memTankSize = 128;
+unsigned char g_memTank[64];
+unsigned int  g_memTankSize = 64;
+OS_STK UserTaskStack[256];
+OS_STK taskStack[256];
 void UserTask (void *pdata)
 {
     void* gpio = lib_gpioAllocDevice(8);// RB0
@@ -76,20 +79,67 @@ void UserTask (void *pdata)
     lib_gpioSetDirectory(gpio, 0);// output
     while (1) {
         lib_gpioWrite(gpio, 0);
-        OSTimeDly(100);
+        for(i = 0; i < 10000; i++){
+            _asm
+            nop
+            _endasm
+        }
+        //OSTimeDly(100);
         lib_gpioWrite(gpio, 1);
+        for(i = 0; i < 10000; i++){
+            _asm
+                    nop
+                    _endasm
+        }
+        //OSTimeDly(100);
+    }
+}
+void InitTask(void* p){
+        int     i_data;
+
+    // configure the input/output pins
+//    ADCON1 = 0b00001110;        // set the A/D register
+//    INTCON2 = 0b01111111;
+//    INTCON3 = 0b00000000;
+        ANSEL = 0;
+        ANSELH = 0;
+
+    // enable interrupts
+    OpenTimer0(TIMER_INT_ON & T0_16BIT & T0_SOURCE_INT & T0_PS_1_1);
+    WriteTimer0(-10000);
+//    OpenTimer0( 0b11111111 & 0b11111101 & 0b11001111 & 0b10111111 );
+
+    // Initialize statistics task
+    #if OS_TASK_STAT_EN > 0u
+    OSStatInit();
+#endif
+
+    // Start up other tasks
+    OSTaskCreate(UserTask, (void *)0, &UserTaskStack[0], 1);
+
+    LATB = 0x00;
+    TRISBbits.TRISB0 = 0;
+
+    // task loop
+    for(;;)
+    {
+        LATBbits.LATB1 = !LATBbits.LATB1;
         OSTimeDly(100);
     }
 }
-OS_STK taskStack[512];
 void main(void) {
     /* Perform PIC Initializations */
+    INTCONbits.GIEH = 0;
+    TRISBbits.TRISB0 = 0;
+    ANSEL = 0;
+    ANSELH = 0;
     OSInit();
     /* Create at least one task by calling OSTaskCreate() */
-    OSTaskCreate (UserTask,
+    OSTaskCreate (InitTask,
                     0,
                     &taskStack[0],
-                    5);
+                    0);
+    INTCONbits.GIEH = 1;
     OSStart();
 
 //    UserTask(0);

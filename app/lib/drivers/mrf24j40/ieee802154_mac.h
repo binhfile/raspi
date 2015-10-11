@@ -41,6 +41,9 @@ typedef struct __attribute__((packed)) {
 	unsigned char 	frameLen;						// header_len + payload_len + fcs_len(2)
 	MAC_HEADER 		header;
 	unsigned char   payload[MAC_DATA_PAYLOAD_SIZE];
+	unsigned short  fcs;
+	unsigned char   lqi;
+	unsigned char   rssi;
 }MAC_RX_DATA_PACKET;
 enum MAC_FRAME_TYPE{
 	MAC_FRAME_TYPE_DATA = 0b00000001,

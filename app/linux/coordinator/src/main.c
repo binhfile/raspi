@@ -1,14 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <lib_debug.h>
-#include <mrf24j40.h>
-#include <iostream>
+#include <lib_time.h>
+#include <mrf24j40/mrf24j40.h>
+
+#include <stdio.h>
 #include <string.h>
-#include <sys/timeb.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <stdint.h>
+
 volatile int 	s_optMode = 0;	// none
 void* 			s_semTx = 0;
 unsigned char	s_txBuffer[512];
@@ -18,35 +14,45 @@ unsigned short  s_txDestId = 0;
 void*			s_semRx;
 unsigned char  	s_rxBuffer[512];
 unsigned char   s_rxLength = 0;
+
 int mac_callback(int type, void* param, void* obj);
 void tx_thread(void* obj, int* terminate);
-uint32_t GetCurrentMs()
-{
-    uint32_t ret = 0;
-    struct timeb tv;
-    ftime(&tv);
-    ret = (uint32_t)(tv.time * 1000 + tv.millitm);
-    return ret;
-}
+
 int main(int argc, char** argv){
-	void* txThread = 0;
+	void		*txThread = 0;
+	const char 	*portName 	= argv[1];
+	int 		resetPin 	= atoi(argv[2]);
+	int 		intrPin 	= atoi(argv[3]);
+	unsigned short id  		= atoi(argv[4]);
+	unsigned short channel  = atoi(argv[5]);
+	char 		szInput[32];
+	int j, i;
+	unsigned short destid;
+	unsigned char cnt = 0;
+	int ret;
+	int failedCnt = 0;
+	int passedCnt = 0;
+	int totalBytes = 0;
+	unsigned int timeNow, timeEnd;
+	int retries = 0;
+	int passed;
+	unsigned int timeDiff;
+	float speed;
+	unsigned char *tx, *rx;;
+
 	if(argc < 6){
 		LREP("usage: %s /dev/spidevX.Y resetPin intrPin id channel\n", argv[0]);
 		return 0;
 	}
-	std::string sz = std::string(argv[1]);
-	int resetPin = atoi(argv[2]);
-	int intrPin = atoi(argv[3]);
-	unsigned short id  = atoi(argv[4]);
-	unsigned short channel  = atoi(argv[5]);
 
-	LREP("cmd='%s'\nreset=%d\nintr=%d id=0x%04X channel=%d\n", sz.c_str(), resetPin, intrPin, id, channel);
+	LREP("cmd='%s'\nreset=%d\nintr=%d id=0x%04X channel=%d\n", portName, resetPin, intrPin, id, channel);
 
 	s_semTx = lib_semAlloc(0);
 	s_semRx = lib_semAlloc(0);
 	txThread = lib_threadAlloc(tx_thread);
 
-	void* mrf = mrf24j40_allocDevice(sz.c_str(),
+	void* mrf = mrf24j40_allocDevice(
+			portName,
 			resetPin,
 			intrPin);
 	if(mrf24j40_openDevice(mrf) != 0){
@@ -55,64 +61,65 @@ int main(int argc, char** argv){
 		return 0;
 	}
 	LREP("open done\n");
-	mrf24j40_initDevice(mrf);
+	mrf24j40_setCallback(mrf, mac_callback, mrf);
 	mrf24j40_setPan(mrf, 0xcafe);
 	mrf24j40_setAddress16(mrf, id);
+	mrf24j40_setAddress32(mrf, id);
 	mrf24j40_setChannel(mrf, channel);
-	mrf24j40_setCallback(mrf, mac_callback, mrf);
 	mrf24j40_setTurboMode(mrf, 1);
+	mrf24j40_initDevice(mrf);
+
 	lib_threadStart(txThread, mrf);
 
 	while(1){
-		std::cout<<">";
-		std::cin>>sz;
-		if(sz == "q") break;
-		else if(sz == "s"){
-			std::cout<<"id  >";
-			std::cin>>sz;
-			unsigned short destid = atoi(sz.c_str());
-			std::cout<<"send>";
-			std::cin>>sz;
-			mrf24j40_sendDataPacket16(mrf, sz.c_str(), sz.length(),
+		LREP(">");
+		scanf("%s", szInput);
+		if(strcmp(szInput, "q") == 0) break;
+		else if(strcmp(szInput, "s") == 0){
+			LREP("id  >");
+			scanf("%s", szInput);
+			destid = atoi(szInput);
+			LREP("send>");
+			scanf("%s", szInput);
+			tx = mrf24j40_getTxPayload(mrf);
+			memcpy(tx, szInput, strlen(szInput));
+			mrf24j40_sendDataPacket16(mrf, strlen(szInput),
 					0xcafe, destid, 1, 0, 0, 0);
 		}
-		else if(sz == "i"){
+		else if(strcmp(szInput,"i") == 0){
 			mrf24j40_initDevice(mrf);
 		}
-		else if(sz == "r"){
+		else if(strcmp(szInput, "r")==0){
 			LREP("goto rx mode.\n");
 			s_optMode = 1;
 		}
-		else if(sz == "t"){
+		else if(strcmp(szInput, "t")==0){
 			LREP("goto tx mode.\n");
-			std::cout<<"dest id>";
-			std::cin>>sz;
-			unsigned short destid = atoi(sz.c_str());
-			std::cout<<"payload len>";
-			std::cin>>sz;
-			int payloadLen = atoi(sz.c_str());
+			LREP("dest id>");
+			scanf("%s", szInput);
+			destid = atoi(szInput);
+			LREP("payload len>");
+			scanf("%s", szInput);
+			int payloadLen = atoi(szInput);
 			if(payloadLen > MAC_DATA_PAYLOAD_SIZE) payloadLen = MAC_DATA_PAYLOAD_SIZE;
-			std::cout<<"packet count>";
-			std::cin>>sz;
-			int pktCount = atoi(sz.c_str());
+			LREP("packet count>");
+			scanf("%s", szInput);
+			int pktCount = atoi(szInput);
 			LREP("tx to %d payload len = %d packet count = %d\n", destid, payloadLen, pktCount);
-			unsigned char cnt = 0;
-			unsigned char payload[512];
-			int ret;
+			cnt = 0;
 			s_optMode = 2;
-			int i;
-			int failedCnt = 0;
-			int passedCnt = 0;
-			int totalBytes = 0;
-			unsigned int timeNow, timeEnd;
-			timeNow = GetCurrentMs();
-			int retries = 0;
+			failedCnt = 0;
+			passedCnt = 0;
+			totalBytes = 0;
+			timeNow = lib_timeGetCurrentMs();
+			retries = 0;
 			for(i = 0; i < pktCount; i++){
-				for(int j = 0; j < payloadLen; j++){
-					payload[j] = cnt++;
+				tx = mrf24j40_getTxPayload(mrf);
+				for(j = 0; j < payloadLen; j++){
+					tx[j] = cnt++;
 				}
 				//LREP("send pkt %d ...", i + 1);
-				mrf24j40_sendDataPacket16(mrf, payload, payloadLen,
+				mrf24j40_sendDataPacket16(mrf, payloadLen,
 						0xcafe, destid, 1, 0, 0, 0);
 				ret = lib_semPend(s_semRx, 1000);
 				int err = 1;
@@ -125,18 +132,18 @@ int main(int argc, char** argv){
 					//	break;
 					//}
 				}else{
-					int passed = 1;
+					passed = 1;
 					if(s_rxLength != payloadLen) passed = 0;
-					for(int j = 0; j < payloadLen; j++){
-						if(s_rxBuffer[j] != payload[j]){
+					for(j = 0; j < payloadLen; j++){
+						if(s_rxBuffer[j] != tx[j]){
 							passed = 0;
 							break;
 						}
 					}
 					if(!passed){
 						LREP("not match.\n");
-						DUMP(payload, payloadLen, "tx %d bytes", payloadLen);
-						DUMP(s_rxBuffer, s_rxLength, "rx %d bytes", s_rxLength);
+//						DUMP(tx, payloadLen, "tx %d bytes", payloadLen);
+//						DUMP(s_rxBuffer, s_rxLength, "rx %d bytes", s_rxLength);
 					}else{
 						retries = 0;
 //						LREP("OK\n");
@@ -150,9 +157,8 @@ int main(int argc, char** argv){
 					passedCnt ++;
 				}
 			}
-			timeEnd = GetCurrentMs();
-			unsigned int timeDiff = timeEnd - timeNow;
-			float speed;
+			timeEnd = lib_timeGetCurrentMs();
+			timeDiff = timeEnd - timeNow;
 			if(timeDiff > 0){
 				speed = (float)totalBytes * 8000.0f / timeDiff;
 			}
@@ -180,7 +186,7 @@ int mac_callback(int type, void* param, void* obj){
 		if(payloadLen > 256) payloadLen = 256;
 //		LREP("rx %d bytes\n", rx->length);
 //		DUMP(&pkt->header, sizeof(MAC_HEADER), "header %d bytes", sizeof(MAC_HEADER));
-		//DUMP(pkt->payload, payloadLen, "%d --> rx %d bytes",pkt->header.srcAddr, payloadLen);
+//		DUMP(pkt->payload, payloadLen, "%d --> rx %d bytes",pkt->header.srcAddr, payloadLen);
 
 		if(s_optMode == 1){
 			memcpy(s_txBuffer, pkt->payload, payloadLen);
@@ -198,6 +204,7 @@ int mac_callback(int type, void* param, void* obj){
 void tx_thread(void* obj, int* terminate){
 	void* mrf = obj;
 	int ret;
+	void *tx;
 	LREP("tx thread is running.\n");
 	while((*terminate) == 0){
 		ret = lib_semPend(s_semTx, 100);
@@ -209,7 +216,9 @@ void tx_thread(void* obj, int* terminate){
 
 //			lib_sleepMs(10);
 			//DUMP( s_txBuffer, s_txLength, "tx --> %d", s_txDestId);
-			mrf24j40_sendDataPacket16(mrf, s_txBuffer, s_txLength,
+			tx = mrf24j40_getTxPayload(mrf);
+			memcpy(tx, s_txBuffer, s_txLength);
+			mrf24j40_sendDataPacket16(mrf, s_txLength,
 								0xcafe, s_txDestId, 1, 0, 0, 0);
 		}
 	}

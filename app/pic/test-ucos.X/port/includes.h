@@ -34,7 +34,7 @@
 *********************************************************************************************************
 */
 
-#include <p18cxxx.h>        // Register definitions
+#include <p18f46k20.h>        // Register definitions
 #include  <string.h>
 
 /*

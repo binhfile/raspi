@@ -1,12 +1,13 @@
-APPNAME=test
+APPNAME=coordinator
 MAKE_DEFINEDS+=DEBUG
 #MAKE_DEFINEDS+=GDB
-ROOT=../
+ROOT=../../
 PROJECT=./
 CROSS_COMPILE=bcm2708-
 CROSS_COMPILE_ROOT=/home/toolchain/tools-master/arm-bcm2708/arm-bcm2708-linux-gnueabi
 CROSS_COMPILE_SYSROOT=$(CROSS_COMPILE_ROOT)/arm-bcm2708-linux-gnueabi/sysroot
 EXTRA_LIB=$(ROOT)/lib
+ZIG_LIB=$(ROOT)/ziglib
 
 #ifneq (,$(findstring RELEASE,$(MAKE_DEFINEDS)))
 #    DEFINEDS+=-D_RELEASE_=1
@@ -39,8 +40,9 @@ OBJS=
 
 INCLUDES+=-I$(PROJECT)/src
 INCLUDES+=-I$(EXTRA_LIB)/include
-INCLUDES+=-I$(EXTRA_LIB)/drivers/mrf24j40
+INCLUDES+=-I$(EXTRA_LIB)/drivers
 INCLUDES+=-I$(EXTRA_LIB)/hwl/bcm2835
+INCLUDES+=-I$(ZIG_LIB)
 
 OBJS+= \
 src/main.o \
@@ -50,12 +52,14 @@ $(EXTRA_LIB)/src/lib_gpio.o \
 $(EXTRA_LIB)/src/lib_spi.o \
 $(EXTRA_LIB)/src/lib_sem.o \
 $(EXTRA_LIB)/src/lib_thread.o \
+$(EXTRA_LIB)/src/lib_time.o \
 $(EXTRA_LIB)/frw/linux/frw_debug_stdout.o \
 $(EXTRA_LIB)/frw/linux/frw_gpio_sysfs.o \
 $(EXTRA_LIB)/frw/linux/frw_mem.o \
 $(EXTRA_LIB)/frw/linux/frw_spi.o \
 $(EXTRA_LIB)/frw/linux/frw_sem.o \
 $(EXTRA_LIB)/frw/linux/frw_thread.o \
+$(EXTRA_LIB)/frw/linux/frw_time.o \
 $(EXTRA_LIB)/drivers/mrf24j40/mrf24j40.o
 
 #$(PREFIX) $(STRIP) --strip-all $(APPNAME)

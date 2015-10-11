@@ -17,7 +17,69 @@
 
 #define  OS_CPU_GLOBALS
 #include "includes.h"
+/*OS_EXT*/ INT32U            OSCtxSwCtr;               /* Counter of number of context switches           */
 
+#if (OS_EVENT_EN) && (OS_MAX_EVENTS > 0u)
+/*OS_EXT*/ OS_EVENT         *OSEventFreeList;          /* Pointer to list of free EVENT control blocks    */
+/*OS_EXT*/ OS_EVENT          OSEventTbl[OS_MAX_EVENTS];/* Table of EVENT control blocks                   */
+#endif
+
+#if OS_TASK_STAT_EN > 0u
+/*OS_EXT*/ INT8U             OSCPUUsage;               /* Percentage of CPU used                          */
+/*OS_EXT*/ INT32U            OSIdleCtrMax;             /* Max. value that idle ctr can take in 1 sec.     */
+/*OS_EXT*/ INT32U            OSIdleCtrRun;             /* Val. reached by idle ctr at run time in 1 sec.  */
+/*OS_EXT*/ BOOLEAN           OSStatRdy;                /* Flag indicating that the statistic task is rdy  */
+/*OS_EXT*/ OS_STK            OSTaskStatStk[OS_TASK_STAT_STK_SIZE];      /* Statistics task stack          */
+#endif
+
+/*OS_EXT*/ INT8U             OSIntNesting;             /* Interrupt nesting level                         */
+
+/*OS_EXT*/ INT8U             OSLockNesting;            /* Multitasking lock nesting level                 */
+
+/*OS_EXT*/ INT8U             OSPrioCur;                /* Priority of current task                        */
+/*OS_EXT*/ INT8U             OSPrioHighRdy;            /* Priority of highest priority task               */
+
+/*OS_EXT*/ OS_PRIO           OSRdyGrp;                        /* Ready list group                         */
+/*OS_EXT*/ OS_PRIO           OSRdyTbl[OS_RDY_TBL_SIZE];       /* Table of tasks which are ready to run    */
+
+/*OS_EXT*/ BOOLEAN           OSRunning;                       /* Flag indicating that kernel is running   */
+
+/*OS_EXT*/ INT8U             OSTaskCtr;                       /* Number of tasks created                  */
+
+/*OS_EXT*/ volatile  INT32U  OSIdleCtr;                                 /* Idle counter                   */
+
+/*OS_EXT*/ OS_STK            OSTaskIdleStk[OS_TASK_IDLE_STK_SIZE];      /* Idle task stack                */
+
+
+/*OS_EXT*/ OS_TCB           *OSTCBCur;                        /* Pointer to currently running TCB         */
+/*OS_EXT*/ OS_TCB           *OSTCBFreeList;                   /* Pointer to list of free TCBs             */
+/*OS_EXT*/ OS_TCB           *OSTCBHighRdy;                    /* Pointer to highest priority TCB R-to-R   */
+/*OS_EXT*/ OS_TCB           *OSTCBList;                       /* Pointer to doubly linked list of TCBs    */
+/*OS_EXT*/ OS_TCB           *OSTCBPrioTbl[OS_LOWEST_PRIO + 1u];    /* Table of pointers to created TCBs   */
+/*OS_EXT*/ OS_TCB            OSTCBTbl[OS_MAX_TASKS + OS_N_SYS_TASKS];   /* Table of TCBs                  */
+
+#if OS_TICK_STEP_EN > 0u
+/*OS_EXT*/ INT8U             OSTickStepState;          /* Indicates the state of the tick step feature    */
+#endif
+
+#if OS_TIME_GET_SET_EN > 0u
+/*OS_EXT*/ volatile  INT32U  OSTime;                   /* Current value of system time (in ticks)         */
+#endif
+
+#if OS_TMR_EN > 0u
+/*OS_EXT*/ INT16U            OSTmrFree;                /* Number of free entries in the timer pool        */
+/*OS_EXT*/ INT16U            OSTmrUsed;                /* Number of timers used                           */
+/*OS_EXT*/ INT32U            OSTmrTime;                /* Current timer time                              */
+
+/*OS_EXT*/ OS_EVENT         *OSTmrSem;                 /* Sem. used to gain exclusive access to timers    */
+/*OS_EXT*/ OS_EVENT         *OSTmrSemSignal;           /* Sem. used to signal the update of timers        */
+
+/*OS_EXT*/ OS_TMR            OSTmrTbl[OS_TMR_CFG_MAX]; /* Table containing pool of timers                 */
+/*OS_EXT*/ OS_TMR           *OSTmrFreeList;            /* Pointer to free list of timers                  */
+/*OS_EXT*/ OS_STK            OSTmrTaskStk[OS_TASK_TMR_STK_SIZE];
+
+/*OS_EXT*/ OS_TMR_WHEEL      OSTmrWheelTbl[OS_TMR_CFG_WHEEL_SIZE];
+#endif
 /*
 *********************************************************************************************************
 *                                        INITIALIZE A TASK'S STACK

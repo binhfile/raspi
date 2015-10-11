@@ -18,7 +18,8 @@
 *                                         uC/OS-II CONFIGURATION
 *********************************************************************************************************
 */
-#include "os_cpu.h"
+#include <os_cpu.h>
+#include <p18f46k20.h>
 #define OS_MAX_EVENTS           10L    /* Max. number of event control blocks in your application ...  */
                                        /* ... MUST be > 0                                              */
 #define OS_MAX_FLAGS             2L    /* Max. number of Event Flag Groups    in your application ...  */
@@ -35,7 +36,7 @@
 
 #define OS_TASK_IDLE_STK_SIZE  100L    /* Idle task stack size (# of OS_STK wide entries)              */
 
-#define OS_TASK_STAT_EN           1    /* Enable (1) or Disable(0) the statistics task                 */
+#define OS_TASK_STAT_EN           0    /* Enable (1) or Disable(0) the statistics task                 */
 #define OS_TASK_STAT_STK_SIZE  100L    /* Statistics task stack size (# of OS_STK wide entries)        */
 
 #define OS_ARG_CHK_EN             1    /* Enable (1) or Disable (0) argument checking                  */
@@ -121,21 +122,29 @@ typedef INT16U             OS_FLAGS;   /* Date type for event flag bits (8, 16 o
 #endif
 #endif
 
-#define OS_FLAGS_NBITS 0
-#define OS_FLAG_NAME_EN 0
-#define OS_MBOX_PEND_ABORT_EN 0
-#define OS_MEM_NAME_EN 0
-#define OS_Q_PEND_ABORT_EN  0
-#define OS_SEM_PEND_ABORT_EN    0
-#define OS_SEM_SET_EN   0
+#define OS_FLAGS_NBITS  8
+#define OS_FLAG_NAME_EN 1
+#define OS_MBOX_PEND_ABORT_EN   1
+#define OS_MEM_NAME_EN  1
+#define OS_Q_PEND_ABORT_EN 1
+#define OS_SEM_PEND_ABORT_EN 1
+#define OS_SEM_SET_EN   1
 #define OS_TASK_STAT_STK_CHK_EN 0
-#define OS_TASK_NAME_EN 0
-#define OS_TASK_REG_TBL_SIZE 0
+#define OS_TASK_NAME_EN 1
+#define OS_TASK_REG_TBL_SIZE    32
 #define OS_TMR_EN 0
+#define OS_TMR_CFG_MAX  4
+#define OS_TMR_CFG_WHEEL_SIZE   32
+#define OS_TMR_CFG_NAME_EN 1
+#define OS_TMR_CFG_TICKS_PER_SEC    1000
+#define OS_TASK_TMR_STK_SIZE        32
 #define OS_APP_HOOKS_EN 0
-#define OS_DEBUG_EN 0
-#define OS_EVENT_MULTI_EN 0
+#define OS_DEBUG_EN     0
+#define OS_EVENT_MULTI_EN 1
 #define OS_TASK_PROFILE_EN 0
 #define OS_TASK_SW_HOOK_EN 0
-#define OS_TICK_STEP_EN 0
+#define OS_TICK_STEP_EN 1
 #define OS_TIME_TICK_HOOK_EN 0
+#define OS_TASK_TMR_PRIO    0
+
+

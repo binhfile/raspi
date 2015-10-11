@@ -65,7 +65,7 @@ unsigned long ulBaud;
 		RCSTA = ( unsigned short ) 0;
 
 		/* Set the baud rate generator using the above calculated constant. */
-		SPBRG = ( unsigned char ) ulBaud;
+		SPBRG = ( unsigned char ) 0xA2;
 
 		/* Setup the IO pins to enable the USART IO. */
 		serTX_PIN = serOUTPUT;
@@ -120,16 +120,19 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
-	/* Return false if after the block time there is no room on the Tx queue. */
-	if( xQueueSend( xCharsForTx, ( const void * ) &cOutChar, xBlockTime ) != pdPASS )
-	{
-		return pdFAIL;
-	}
-
-	/* Turn interrupt on - ensure the compiler only generates a single 
+    /* Turn interrupt on - ensure the compiler only generates a single 
 	instruction for this. */
 	PIE1bits.TXIE = serINTERRUPT_ENABLED;
-
+    
+    if(TXSTAbits.TRMT){
+        TXREG = cOutChar;
+    }else{
+        /* Return false if after the block time there is no room on the Tx queue. */
+        if( xQueueSend( xCharsForTx, ( const void * ) &cOutChar, xBlockTime ) != pdPASS )
+        {
+            return pdFAIL;
+        }
+    }
 	return pdPASS;
 }
 /*-----------------------------------------------------------*/
@@ -150,7 +153,6 @@ void vSerialRxISR( void )
 {
 char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-
 	/* Get the character and post it on the queue of Rxed characters.
 	If the post causes a task to wake force a context switch as the woken task
 	may have a higher priority than the task we have interrupted. */
@@ -164,7 +166,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	}
 
 	xQueueSendFromISR( xRxedChars, ( const void * ) &cChar, &xHigherPriorityTaskWoken );
-
+        
 	if( xHigherPriorityTaskWoken )
 	{
 		taskYIELD();

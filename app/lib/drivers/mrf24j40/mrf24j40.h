@@ -12,6 +12,7 @@ extern "C" {
 typedef int (*MRF24J40_CALLBACK)(int type, void* param, void* obj);
 enum MRF24J40_CALLBACK_TYPE{
 	MRF24J40_CALLBACK_TYPE_RX = 1,
+	MRF24J40_CALLBACK_TYPE_TX_DONE
 };
 typedef struct{
 	void* packet;
@@ -21,9 +22,9 @@ typedef struct{
 	MRF24J40_CALLBACK	cb;
 	void*				cb_obj;
 
-	char szSpiDeviceName[512];
-	int	 resetPinNum;
-	int  intrPinNum;
+	char *szSpiDeviceName;
+	unsigned char resetPinNum;
+	unsigned char intrPinNum;
 
 	void* reset;
 	void* intr;
@@ -31,11 +32,15 @@ typedef struct{
 	void* access;
 	void* threadRx;
 
-	int  txSequence;
+	unsigned char txSequence;
+	unsigned char txBuffer[MRF_TX_FIFO_LEN];
+	unsigned char rxBuffer[MRF_RX_FIFO_LEN];
 
-	unsigned short panId;
-	unsigned short addr16;
-
+	unsigned short 		panId;
+	unsigned short 		addr16;
+	unsigned long long 	addr32;
+	unsigned char 		channel;
+	char 				turboMode;
 
 }MRF24J40;
 
@@ -49,12 +54,16 @@ int   				mrf24j40_setCallback(void* dev, MRF24J40_CALLBACK fxn, void* obj);
 int	  				mrf24j40_setChannel(void* dev, int channel);
 int	  				mrf24j40_setPan(void* dev, unsigned short pan);
 int	  				mrf24j40_setAddress16(void* dev, unsigned short address);
+int 				mrf24j40_setAddress32(void* dev, unsigned long long address);
 int	  				mrf24j40_setTurboMode(void* dev, int set);
 
 unsigned short	  	mrf24j40_getPan(void* dev);
 unsigned short    	mrf24j40_getAddress16(void* dev);
+unsigned char		mrf24j40_calcRSSI(void* dev);
 
-int   				mrf24j40_sendDataPacket16(void* dev, const void* payload, int payloadLen,
+void*				mrf24j40_getTxPayload(void* dev);
+int   				mrf24j40_sendDataPacket16(void* dev,
+								int payloadLen,
 								unsigned short destPan, unsigned short destAddr,
 								int ackRequest, int securityEnable, int framePending, int intraPan);
 int   				mrf24j40_hardReset(void* dev);

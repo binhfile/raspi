@@ -143,6 +143,9 @@
 
 #define MRF_TX_FIFO	0x000
 
+#define MRF_RX_FIFO_LEN		144
+#define MRF_TX_FIFO_LEN		128
+
 
 
 

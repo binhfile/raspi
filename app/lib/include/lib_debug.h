@@ -10,16 +10,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include "lib_defines.h"
 typedef void (*DEBUG_CALLBACK)(const char* sz, void* obj);
 void lib_debugPrint(const char* sz, ...);
 void lib_debugDump(const void* mem, int length, const char* sz, ...);
 void lib_debugSetCallback(DEBUG_CALLBACK fxn, void* obj);
+
 #define LREP	lib_debugPrint
 #define DUMP	lib_debugDump
 
 #define LREP_WARN(x, args...)	lib_debugPrint("warn:" x, ##args)
 #define LREP_ERR(x, args...)	lib_debugPrint("err :" x, ##args)
-#define DEBUG_BUFSIZE		2048
 #ifdef __cplusplus
 }
 #endif

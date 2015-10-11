@@ -21,9 +21,10 @@
 *********************************************************************************************************
 */
 
-//#ifndef  OS_MASTER_FILE
+#ifndef  OS_MASTER_FILE
 #include <ucos_ii.h>
-//#endif
+#endif
+
 /*$PAGE*/
 /*
 *********************************************************************************************************
@@ -1199,7 +1200,7 @@ void  OSTaskRegSet (INT8U    prio,
 * Note(s)    : This function is INTERNAL to uC/OS-II and your application should not call it.
 *********************************************************************************************************
 */
-extern void          OSTaskReturnHook        (OS_TCB          *ptcb);
+
 void  OS_TaskReturn (void)
 {
     OSTaskReturnHook(OSTCBCur);                   /* Call hook to let user decide on what to do        */

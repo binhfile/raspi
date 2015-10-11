@@ -22,7 +22,6 @@
 */
 
 #include <ucos_ii.h>
-
 /*
 *********************************************************************************************************
 *                                             DEBUG DATA
@@ -37,7 +36,7 @@ INT32U  const  OSEndiannessTest    = 0x12345678uL;              /* Variable to t
 
 INT16U  const  OSEventEn           = OS_EVENT_EN;
 INT16U  const  OSEventMax          = OS_MAX_EVENTS;             /* Number of event control blocks      */
-INT16U  const  OSEventNameEn       = OS_EVENT_NAME_EN;
+INT16U  const  OSEventNameEn       = 1;//OS_EVENT_NAME_EN;
 #if (OS_EVENT_EN) && (OS_MAX_EVENTS > 0u)
 INT16U  const  OSEventSize         = sizeof(OS_EVENT);          /* Size in Bytes of OS_EVENT           */
 INT16U  const  OSEventTblSize      = sizeof(OSEventTbl);        /* Size of OSEventTbl[] in bytes       */
