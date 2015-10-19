@@ -16,11 +16,23 @@ void lib_debugPrint(const char* sz, ...);
 void lib_debugDump(const void* mem, int length, const char* sz, ...);
 void lib_debugSetCallback(DEBUG_CALLBACK fxn, void* obj);
 
+#if defined(__linux__)
 #define LREP	lib_debugPrint
 #define DUMP	lib_debugDump
-
 #define LREP_WARN(x, args...)	lib_debugPrint("warn:" x, ##args)
 #define LREP_ERR(x, args...)	lib_debugPrint("err :" x, ##args)
+#elif defined(__XC__)
+//extern void lib_debugPrintInt16(INT16 x);
+//extern void lib_debugPrintUint16(UINT16 x);
+//extern void lib_debugPrintHexa(UINT32 x);
+
+#define LREP     lib_debugPrint
+#define DUMP     lib_debugDump
+
+//#define LREP_INT(x)        lib_debugPrintInt16(x)
+//#define LREP_UINT(x)       lib_debugPrintUint16(x)
+//#define LREP_HEX(x)        lib_debugPrintHexa(x) 
+#endif
 #ifdef __cplusplus
 }
 #endif

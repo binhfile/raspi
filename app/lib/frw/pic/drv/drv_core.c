@@ -55,7 +55,7 @@ int drv_register(DRV_ELEM* drv){
     return -ret;
 }
 int open(const char *pathname, int flags){
-    int ret = EPERM;
+    int ret = -EPERM;
     DRV_ELEM* drv = 0;
     
     drv = drv_findByName(pathname);
@@ -63,24 +63,30 @@ int open(const char *pathname, int flags){
         if(drv->opt.open)
             ret = drv->opt.open(drv, flags);
         else {
-            ret = EPERM;
+            ret = -EPERM;
         }
     }
-    errno = ret;
-    return -ret;
+    if(ret != 0){
+        errno = -ret;
+        return ret;
+    }
+    return ret;
 }
 int close(int fd){
-    int ret = EPERM;
+    int ret = -EPERM;
     DRV_ELEM* drv = 0;
     
     drv = drv_findByFd(fd);
     if(drv != 0){
         if(drv->opt.close)
             ret = drv->opt.close(drv);
-        else ret = EPERM;
+        else ret = -EPERM;
     }
-    errno = ret;
-    return -ret;
+    if(ret != 0){
+        errno = -ret;
+        return ret;
+    }
+    return ret;
 }
 //ssize_t read(int fd, void* buf, size_t count){
 //    return ((DRV_ELEM* )(g_drvHead + fd))->opt->read((g_drvHead + fd), buf, count);

@@ -8,6 +8,7 @@ CROSS_COMPILE_ROOT=/home/toolchain/tools-master/arm-bcm2708/arm-bcm2708-linux-gn
 CROSS_COMPILE_SYSROOT=$(CROSS_COMPILE_ROOT)/arm-bcm2708-linux-gnueabi/sysroot
 EXTRA_LIB=$(ROOT)/lib
 ZIG_LIB=$(ROOT)/ziglib
+MCP_ZIGBEE=$(ROOT)/MPZigBee
 
 #ifneq (,$(findstring RELEASE,$(MAKE_DEFINEDS)))
 #    DEFINEDS+=-D_RELEASE_=1
@@ -43,9 +44,24 @@ INCLUDES+=-I$(EXTRA_LIB)/include
 INCLUDES+=-I$(EXTRA_LIB)/drivers
 INCLUDES+=-I$(EXTRA_LIB)/hwl/bcm2835
 INCLUDES+=-I$(ZIG_LIB)
+INCLUDES+=-I$(MCP_ZIGBEE)/ZigBeeStack
+INCLUDES+=-I$(MCP_ZIGBEE)/Common
+
+OBJS+= \
+$(MCP_ZIGBEE)/ZigBeeStack/zZDO.o \
+$(MCP_ZIGBEE)/ZigBeeStack/zSecurity_MRF24J40.o \
+$(MCP_ZIGBEE)/ZigBeeStack/zPHY_MRF24J40.o \
+$(MCP_ZIGBEE)/ZigBeeStack/zNWK.o \
+$(MCP_ZIGBEE)/ZigBeeStack/zNVM.o \
+$(MCP_ZIGBEE)/ZigBeeStack/zMAC_MRF24J40.o \
+$(MCP_ZIGBEE)/ZigBeeStack/ZigbeeTasks.o \
+$(MCP_ZIGBEE)/ZigBeeStack/zAPS.o \
+$(MCP_ZIGBEE)/ZigBeeStack/SymbolTime.o \
+$(MCP_ZIGBEE)/Common/sralloc.o
 
 OBJS+= \
 src/main.o \
+src/myZigBee.o \
 $(EXTRA_LIB)/src/lib_mem.o \
 $(EXTRA_LIB)/src/lib_debug.o \
 $(EXTRA_LIB)/src/lib_gpio.o \

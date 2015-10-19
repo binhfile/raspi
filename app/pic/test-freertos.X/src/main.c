@@ -71,6 +71,8 @@ transmitted. */
 #define mainNO_BLOCK					( ( TickType_t ) 0 )
 #define mainBAUD_RATE					( ( unsigned long ) 9600 )
 
+#include <lib_debug.h>
+
 /*
  * The task function for the "Check" task.
  */
@@ -86,20 +88,15 @@ static void vTask2( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* Creates the tasks, then starts the scheduler. */
-static char szBuffer[32] = {'a', 'b'};
-const char rom versionString[] = "hello\r\n";
 void main( void )
-{ 
-    strcmppgm2ram(szBuffer, versionString);
-//    szBuffer[0] = 'x';
-    
+{     
     OSCTUNEbits.PLLEN = 0;
     ANSELH = 0x00;
     ANSEL = 0x00;
     TXSTA       = 0x24;
     RCSTA       = 0x90;
     BAUDCON     = 0x00;
-    SPBRG       = 0xA2;
+    SPBRG       = 0x0D;
     
 	vPortInitialiseBlocks();
 //    xSerialPortInitMinimal(9600, 5);
@@ -111,15 +108,6 @@ void main( void )
 	/* Start the scheduler.  Will never return here. */
 	vTaskStartScheduler();
 //    vTask2(0);
-}
-
-static void pushString(int len)
-{
-//    int i;
-//    for(i = 0; i < len; i++){
-        TXREG = szBuffer[0];
-//        while(!TXSTAbits.TRMT){ Nop();}
-//    }
 }
 /*-----------------------------------------------------------*/
 static void vTask1( void *pvParameters )
@@ -170,14 +158,9 @@ static void vTask2( void *pvParameters )
     LATB = 0;
     len = 7;
     
-//    strcmppgm2ram(szBuffer, "hello\r\n");
 	for( ;; )
 	{
-//        xSerialPutChar(0, tx, mainNO_BLOCK);
-        
-            pushString(7);
-       
-        
+        LREP("Trigger %d\r\n", 1);
         LATB = LATB & (~(0x01 << 1));
         for(i = 0 ;  i < 1000; i++){
             for(j = 0; j < 50; j++){
@@ -205,3 +188,46 @@ static void vTask2( void *pvParameters )
 	}
 }
 /*-----------------------------------------------------------*/
+void printHexa(unsigned char x){
+    x = x & 0x0F;
+    if(x >= 0 && x <= 9) x = x + '0';
+    else if (x >= 10 && x <= 15) x = x - 10 + 'A';
+    else x = '?';
+    TXREG = x;
+    while(!TXSTAbits.TRMT){ Nop();}
+}
+void frw_debugPrint(char sz[]){
+//    int i;
+//    for(i = 0; i < 64; i++){
+//        if(p[i] == '\0') break;
+//        TXREG = p[i];
+//        while(!TXSTAbits.TRMT){ Nop();}
+//    }
+    
+//    unsigned int addr = (unsigned int)sz;
+//    printHexa(addr >> 12);
+//    printHexa(addr >> 8);
+//    printHexa(addr >> 4);
+//    printHexa(addr >> 0);
+//    addr = (unsigned int)&g_debugBuffer[0];
+//    TXREG = '-';
+//    while(!TXSTAbits.TRMT){ Nop();}
+//    printHexa(addr >> 12);
+//    printHexa(addr >> 8);
+//    printHexa(addr >> 4);
+//    printHexa(addr >> 0);
+    
+    TXREG = sz[0];
+    while(!TXSTAbits.TRMT){ Nop();}
+    TXREG = sz[1];
+    while(!TXSTAbits.TRMT){ Nop();}
+    
+    TXREG = '\r';
+    while(!TXSTAbits.TRMT){ Nop();}
+    TXREG = '\n';
+    while(!TXSTAbits.TRMT){ Nop();}
+    
+    
+}
+
+// end of file

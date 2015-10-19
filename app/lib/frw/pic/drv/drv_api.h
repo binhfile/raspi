@@ -24,7 +24,7 @@ extern "C" {
     typedef int (*DRV_OPEN)(void *drv, int flags);
     typedef int (*DRV_CLOSE)(void *drv);
     typedef ssize_t (*DRV_READ)(void *drv, void* buf, size_t count);
-    typedef ssize_t (*DRV_WRITE)(void *drv, void* buf, size_t count);
+    typedef ssize_t (*DRV_WRITE)(void *drv, const void* buf, size_t count);
     typedef int (*DRV_IOCTL)(void *drv, int request, unsigned int arguments);
     typedef struct{
 //        DRV_INIT        init;

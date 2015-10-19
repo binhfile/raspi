@@ -17,6 +17,14 @@ char *	strcpy(char *dest, const char *src){
     *dest = '\0';
     return dest;
 }
+size_t strlen(const char *s){
+    size_t ret = 0;
+    while(*s != '\0'){
+        ret++;
+        s++;
+    }
+    return ret;
+}
 void *	memset(void *s, int val, size_t count){
     char* p = (char*)s;
     int i;

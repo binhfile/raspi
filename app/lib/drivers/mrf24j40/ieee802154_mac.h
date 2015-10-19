@@ -46,7 +46,7 @@ typedef struct __attribute__((packed)) {
 	unsigned char   rssi;
 }MAC_RX_DATA_PACKET;
 enum MAC_FRAME_TYPE{
-	MAC_FRAME_TYPE_DATA = 0b00000001,
+	MAC_FRAME_DATA = 0b00000001,
 };
 enum MAC_ADDRESS_MODE{
 	MAC_ADDRESS_MODE_16 = 0b00000010,

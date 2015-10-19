@@ -47,6 +47,15 @@
       <logicalFolder name="include" displayName="include" projectFiles="true">
         <logicalFolder name="internal" displayName="internal" projectFiles="true">
         </logicalFolder>
+        <itemPath>../../lib/include/lib_debug.h</itemPath>
+        <itemPath>../../lib/include/lib_defines.h</itemPath>
+        <itemPath>../../lib/include/lib_gpio.h</itemPath>
+        <itemPath>../../lib/include/lib_mem.h</itemPath>
+        <itemPath>../../lib/include/lib_sem.h</itemPath>
+        <itemPath>../../lib/include/lib_spi.h</itemPath>
+        <itemPath>../../lib/include/lib_thread.h</itemPath>
+        <itemPath>../../lib/include/lib_time.h</itemPath>
+        <itemPath>../../lib/include/thread.h</itemPath>
       </logicalFolder>
       <logicalFolder name="src" displayName="src" projectFiles="true">
         <itemPath>../../lib/src/lib_thread.c</itemPath>
@@ -164,7 +173,7 @@
         <C18LanguageToolchain>
         </C18LanguageToolchain>
       </item>
-      <item path="../../lib/src/lib_debug.c" ex="true" overriding="false">
+      <item path="../../lib/src/lib_debug.c" ex="false" overriding="false">
         <C18>
         </C18>
         <C18-AS>
@@ -243,7 +252,7 @@
         <property key="enable-ou" value="true"/>
         <property key="enable-ow" value="true"/>
         <property key="extra-include-directories"
-                  value="../FreeRTOS/Source/include;../FreeRTOS/Source/portable/MPLAB/PIC18F;src"/>
+                  value="../FreeRTOS/Source/include;../FreeRTOS/Source/portable/MPLAB/PIC18F;src;../../lib/include"/>
         <property key="optimization-master" value="Enable all"/>
         <property key="preprocessor-macros" value=""/>
         <property key="procedural-abstraction-passes" value="4"/>

@@ -4,12 +4,25 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>../../lib/frw/pic/drv/drv_api.h</itemPath>
-      <itemPath>../../lib/frw/pic/drv/drv_errno.h</itemPath>
-      <itemPath>../../lib/frw/pic/drv/internal/drv_internal.h</itemPath>
-      <itemPath>../../lib/frw/pic/frw_string.h</itemPath>
-      <itemPath>src/app_cfg.h</itemPath>
-      <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_usart.h</itemPath>
+      <logicalFolder name="f1" displayName="drv" projectFiles="true">
+        <itemPath>../../lib/frw/pic/drv/drv_api.h</itemPath>
+        <itemPath>../../lib/frw/pic/drv/drv_errno.h</itemPath>
+        <itemPath>../../lib/frw/pic/drv/internal/drv_internal.h</itemPath>
+        <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_regs.h</itemPath>
+        <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_uart.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="frw" projectFiles="true">
+        <itemPath>../../lib/frw/pic/frw_string.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="lib" projectFiles="true">
+        <itemPath>../../lib/include/lib_debug.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="os" projectFiles="true">
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os.h</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/ucos_ii.h</itemPath>
+        <itemPath>../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/OS-Probe/os_cfg.h</itemPath>
+      </logicalFolder>
+      <itemPath>src/prj_cfg.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -18,11 +31,36 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>../../lib/frw/pic/frw_string.c</itemPath>
+      <logicalFolder name="f1" displayName="drv" projectFiles="true">
+        <itemPath>../../lib/frw/pic/drv/drv_core.c</itemPath>
+        <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_uart.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="frw" projectFiles="true">
+        <itemPath>../../lib/frw/pic/frw_string.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="lib" projectFiles="true">
+        <itemPath>../../lib/src/lib_debug.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="os" projectFiles="true">
+        <logicalFolder name="f1" displayName="port" projectFiles="true">
+          <itemPath>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16/os_cpu_a.s</itemPath>
+          <itemPath>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16/os_cpu_c.c</itemPath>
+          <itemPath>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16/os_cpu_util_a.s</itemPath>
+        </logicalFolder>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_core.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_flag.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_mbox.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_mem.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_mutex.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_q.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_sem.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_task.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_time.c</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_tmr.c</itemPath>
+      </logicalFolder>
       <itemPath>src/main.c</itemPath>
-      <itemPath>src/app_cfg.c</itemPath>
-      <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_usart.c</itemPath>
-      <itemPath>../../lib/frw/pic/drv/drv_core.c</itemPath>
+      <itemPath>src/chip_cfg.c</itemPath>
+      <itemPath>src/prj_cfg.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -33,6 +71,10 @@
   <sourceRootList>
     <Elem>../../lib</Elem>
     <Elem>src</Elem>
+    <Elem>../../third-party/Micrium/Software/uCOS-II/Source</Elem>
+    <Elem>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16</Elem>
+    <Elem>../../third-party/Micrium/Software/uCOS-II/Cfg/Template</Elem>
+    <Elem>../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/OS-Probe</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -84,7 +126,8 @@
         <property key="enable-short-double" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
-        <property key="extra-include-directories" value="src;../../lib/frw/pic"/>
+        <property key="extra-include-directories"
+                  value="src;../../lib/frw/pic;../../lib/include;../../third-party/Micrium/Software/uCOS-II/Source;../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16;../../third-party/Micrium/Software/uC-LIB;../../third-party/Micrium/Software/uC-CPU;../../third-party/Micrium/Software/uC-CPU/Microchip/XC16;../../third-party/Micrium/Software/uC-CPU/Cfg/Template;../../third-party/Micrium/Software/uC-LIB/Cfg/Template;../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/BSP;../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/OS-Probe"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
@@ -115,7 +158,8 @@
       <C30-AS>
         <property key="assembler-symbols" value=""/>
         <property key="expand-macros" value="false"/>
-        <property key="extra-include-directories-for-assembler" value=""/>
+        <property key="extra-include-directories-for-assembler"
+                  value="../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16"/>
         <property key="extra-include-directories-for-preprocessor" value=""/>
         <property key="false-conditionals" value="false"/>
         <property key="keep-locals" value="false"/>

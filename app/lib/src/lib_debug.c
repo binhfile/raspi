@@ -11,7 +11,7 @@
 #include <ctype.h>
 DEBUG_CALLBACK	g_debug_callback_fxn = 0;
 void*			g_debug_callback_obj = 0;
-extern void frw_debugPrint(const void* sz);
+extern void     frw_debugPrint(const void* sz);
 void lib_debugSetCallback(DEBUG_CALLBACK fxn, void* obj){
 	g_debug_callback_fxn = fxn;
 	g_debug_callback_obj = obj;

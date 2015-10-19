@@ -259,7 +259,7 @@ int mrf24j40_sendDataPacket16(void* dev,
 		if(payloadLen > MAC_DATA_PAYLOAD_SIZE) payloadLen = MAC_DATA_PAYLOAD_SIZE;
 		pkt->headerLen	=	sizeof(MAC_HEADER);
 		pkt->frameLen	=   sizeof(MAC_HEADER) + payloadLen;
-		pkt->header.ctrl.type 			= MAC_FRAME_TYPE_DATA;
+		pkt->header.ctrl.type 			= MAC_FRAME_DATA;
 		pkt->header.ctrl.security 		= securityEnable ? 1 : 0;
 		pkt->header.ctrl.framePending 	= framePending ? 1 : 0;
 		pkt->header.ctrl.ackReq 		= ackRequest ? 1 : 0;
@@ -300,6 +300,8 @@ inline void _mrf24j40_writeShort(void* dev, unsigned char address, unsigned char
 inline void _mrf24j40_writeLong(void* dev, unsigned short address, unsigned char data){
 	static unsigned char tx[3];
 	static unsigned char rx[3];
+
+//	LREP("%04X=%02x\r\n", address, data);
 
 	tx[0] = 0x80 | ((address >> 3) & 0x7F);
 	tx[1] = 0x10 | ((address << 5) & 0xE0);
@@ -411,43 +413,43 @@ void _mrf24j40_rx_run(void* obj, int* terminate){
 			LREP("wait intr failed.\n");
 			break;
 		}else if(ret > 0){
-			lib_semPend(inst->access, 0);
-			intstats = _mrf24j40_readShort(inst, MRF_INTSTAT);
-			lib_semPost(inst->access);
-			//LREP("intr detected %02x.\n", intstats);
-			if(intstats & 0x01){
-				lib_semPend(inst->access, 0);
-				txstats = _mrf24j40_readShort(inst, MRF_TXSTAT);
-				lib_semPost(inst->access);
-				//LREP("txstats %02x.\n", txstats);
-				if(txstats & 0x01){
-					LREP("TX normal failed, retries=%d\n", ((txstats & 0b11000000) >> 6));
-				}else{
-//					LREP("TX normal success\n");
-					if(inst->cb){
-						inst->cb(MRF24J40_CALLBACK_TYPE_TX_DONE, &rxParam, inst->cb_obj);
-					}
-				}
-			}
-			if(intstats & 0b00001000){
-//				LREP("RX fifo interrupt\n");
-				lib_semPend(inst->access, 0);
-				_mrf24j40_writeShort(inst, MRF_BBREG1, 0x04);// disable rx
-				frameLen = _mrf24j40_readLong(inst, 0x300);
-				frameLen = frameLen + 3;
-				if(frameLen > MRF_RX_FIFO_LEN)
-					frameLen = MRF_RX_FIFO_LEN;
-
-				for(i = 0; i < frameLen; i++){
-					inst->rxBuffer[i] = _mrf24j40_readLong(inst, 0x300 + i);
-				}
-				_mrf24j40_writeShort(inst, MRF_BBREG1, 0x00);// enable rx
-				lib_semPost(inst->access);
-				rxParam.length = frameLen;
+//			lib_semPend(inst->access, 0);
+//			intstats = _mrf24j40_readShort(inst, MRF_INTSTAT);
+//			lib_semPost(inst->access);
+//			//LREP("intr detected %02x.\n", intstats);
+//			if(intstats & 0x01){
+//				lib_semPend(inst->access, 0);
+//				txstats = _mrf24j40_readShort(inst, MRF_TXSTAT);
+//				lib_semPost(inst->access);
+//				//LREP("txstats %02x.\n", txstats);
+//				if(txstats & 0x01){
+//					LREP("TX normal failed, retries=%d\n", ((txstats & 0b11000000) >> 6));
+//				}else{
+////					LREP("TX normal success\n");
+//					if(inst->cb){
+//						inst->cb(MRF24J40_CALLBACK_TYPE_TX_DONE, &rxParam, inst->cb_obj);
+//					}
+//				}
+//			}
+//			if(intstats & 0b00001000){
+////				LREP("RX fifo interrupt\n");
+//				lib_semPend(inst->access, 0);
+//				_mrf24j40_writeShort(inst, MRF_BBREG1, 0x04);// disable rx
+//				frameLen = _mrf24j40_readLong(inst, 0x300);
+//				frameLen = frameLen + 3;
+//				if(frameLen > MRF_RX_FIFO_LEN)
+//					frameLen = MRF_RX_FIFO_LEN;
+//
+//				for(i = 0; i < frameLen; i++){
+//					inst->rxBuffer[i] = _mrf24j40_readLong(inst, 0x300 + i);
+//				}
+//				_mrf24j40_writeShort(inst, MRF_BBREG1, 0x00);// enable rx
+//				lib_semPost(inst->access);
+//				rxParam.length = frameLen;
 				if(inst->cb){
 					inst->cb(MRF24J40_CALLBACK_TYPE_RX, &rxParam, inst->cb_obj);
 				}
-			}
+//			}
 		}
 	}
 	LREP("interrupt routine is stopped.\n");
