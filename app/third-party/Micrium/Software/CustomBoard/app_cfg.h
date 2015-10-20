@@ -43,7 +43,6 @@
 */
 
 #define  APP_TASK_START_PRIO                    0                       /* Lower numbers are of higher priority                     */
-#define  APP_TASK_LCD_PRIO                      6
 #define  OS_PROBE_TASK_PRIO                     8                       /* See probe_com_cfg for RS-232 communication task priority */
 #define  OS_PROBE_TASK_ID                       8
 #define  OS_TASK_TMR_PRIO                      10
@@ -63,16 +62,6 @@
 #define  APP_TASK_START_STK_SIZE              128
 #define  APP_TASK_LCD_STK_SIZE                256
 #define  OS_PROBE_TASK_STK_SIZE               160                       /* See probe_com_cfg for RS-232 commication task stack size */
-
-
-/*
-*********************************************************************************************************
-*                                          uC/LCD
-*********************************************************************************************************
-*/
-
-#define  DISP_BUS_WIDTH                         8                       /* Data bus width: 4 or 8 bit                               */
-
 
 /*
 *********************************************************************************************************

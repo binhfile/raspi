@@ -18,9 +18,15 @@
         <itemPath>../../lib/include/lib_debug.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="os" projectFiles="true">
+        <logicalFolder name="f1" displayName="port" projectFiles="true">
+          <itemPath>../../third-party/Micrium/Software/CustomBoard/app_cfg.h</itemPath>
+          <itemPath>../../third-party/Micrium/Software/CustomBoard/bsp.h</itemPath>
+          <itemPath>../../third-party/Micrium/Software/CustomBoard/includes.h</itemPath>
+          <itemPath>../../third-party/Micrium/Software/CustomBoard/os_cfg.h</itemPath>
+        </logicalFolder>
         <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os.h</itemPath>
         <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/ucos_ii.h</itemPath>
-        <itemPath>../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/OS-Probe/os_cfg.h</itemPath>
+        <itemPath>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16/os_cpu.h</itemPath>
       </logicalFolder>
       <itemPath>src/prj_cfg.h</itemPath>
     </logicalFolder>
@@ -46,6 +52,8 @@
           <itemPath>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16/os_cpu_a.s</itemPath>
           <itemPath>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16/os_cpu_c.c</itemPath>
           <itemPath>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16/os_cpu_util_a.s</itemPath>
+          <itemPath>../../third-party/Micrium/Software/CustomBoard/bsp.c</itemPath>
+          <itemPath>../../third-party/Micrium/Software/CustomBoard/bsp_a.s</itemPath>
         </logicalFolder>
         <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_core.c</itemPath>
         <itemPath>../../third-party/Micrium/Software/uCOS-II/Source/os_flag.c</itemPath>
@@ -75,6 +83,8 @@
     <Elem>../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16</Elem>
     <Elem>../../third-party/Micrium/Software/uCOS-II/Cfg/Template</Elem>
     <Elem>../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/OS-Probe</Elem>
+    <Elem>../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/BSP</Elem>
+    <Elem>../../third-party/Micrium/Software/CustomBoard</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -127,7 +137,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="extra-include-directories"
-                  value="src;../../lib/frw/pic;../../lib/include;../../third-party/Micrium/Software/uCOS-II/Source;../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16;../../third-party/Micrium/Software/uC-LIB;../../third-party/Micrium/Software/uC-CPU;../../third-party/Micrium/Software/uC-CPU/Microchip/XC16;../../third-party/Micrium/Software/uC-CPU/Cfg/Template;../../third-party/Micrium/Software/uC-LIB/Cfg/Template;../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/BSP;../../third-party/Micrium/Software/EvalBoards/Microchip/Explorer16/XC16/OS-Probe"/>
+                  value="src;../../lib/frw/pic;../../lib/include;../../third-party/Micrium/Software/CustomBoard;../../third-party/Micrium/Software/uCOS-II/Source;../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16;../../third-party/Micrium/Software/uC-LIB;../../third-party/Micrium/Software/uC-CPU;../../third-party/Micrium/Software/uC-CPU/Microchip/XC16;../../third-party/Micrium/Software/uC-LIB/Cfg/Template;../../third-party/Micrium/Software/uCOS-II/Cfg/Template;../../third-party/Micrium/Software/uC-CPU/Cfg/Template"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
