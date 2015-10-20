@@ -18,6 +18,24 @@ extern "C" {
 #ifndef size_t
 #define size_t      unsigned int
 #endif
+#ifndef INT8
+#define INT8        char
+#endif
+#ifndef UINT8
+#define UINT8       unsigned char
+#endif
+#ifndef INT16
+#define INT16       short
+#endif
+#ifndef UINT16
+#define UINT16      unsigned short
+#endif
+#ifndef INT32
+#define INT32       long long
+#endif
+#ifndef UINT32
+#define UINT32       unsigned long long
+#endif
 #define DRV_CORE_MAX_DEVICE     16
     //    typedef int (*DRV_INIT)();
 //    typedef int (*DRV_RELEASE)();

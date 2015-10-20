@@ -1,14 +1,18 @@
 #ifndef DRV_UART_H
 #define DRV_UART_H
-#include <stdint.h>
-#ifndef UINT32
-#define UINT32  uint32_t
-#endif
+#include "../../drv_api.h"
 /*------ ioctl request ------*/
 #define TCGETS2         0x01    // args = &struct termios2
 #define TCSETS2         0x02    // args = &struct termios2
-#define UART_IOCTL_SET_FCY    0x03    // args = &Fcy (&UINT32)
+#define UART_IOCTL_MAP_PIN  0x03    // args = &struct UART_MAP_PIN
 /*------ ioctl arguments ----*/
+struct UART_MAP_PIN{
+    char tx;
+    char rx;
+    char cts;
+    char rts;
+};
+
 typedef UINT32          tcflag_t;
 typedef unsigned char   cc_t;
 typedef UINT32          speed_t;

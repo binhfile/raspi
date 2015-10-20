@@ -10,6 +10,8 @@
         <itemPath>../../lib/frw/pic/drv/internal/drv_internal.h</itemPath>
         <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_regs.h</itemPath>
         <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_uart.h</itemPath>
+        <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_utils.h</itemPath>
+        <itemPath>../../../../../../Desktop/sync/raspi/trunk/app/lib/frw/pic/drv/chip/pic24fj/drv_common.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="frw" projectFiles="true">
         <itemPath>../../lib/frw/pic/frw_string.h</itemPath>
@@ -40,6 +42,8 @@
       <logicalFolder name="f1" displayName="drv" projectFiles="true">
         <itemPath>../../lib/frw/pic/drv/drv_core.c</itemPath>
         <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_uart.c</itemPath>
+        <itemPath>../../lib/frw/pic/drv/chip/pic24fj/drv_utils.c</itemPath>
+        <itemPath>../../../../../../Desktop/sync/raspi/trunk/app/lib/frw/pic/drv/chip/pic24fj/drv_common.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="frw" projectFiles="true">
         <itemPath>../../lib/frw/pic/frw_string.c</itemPath>

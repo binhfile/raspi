@@ -11,11 +11,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-#include <frw_string.h>
-    
-#define FREQ_OSC    (8000000L)
-#define FREQ_DIV    (1)
-#define FREQ_PLL    (1)
+#include <frw_string.h>   
     
     extern int g_fd_uart0;
     

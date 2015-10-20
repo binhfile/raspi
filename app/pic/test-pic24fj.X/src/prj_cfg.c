@@ -2,18 +2,25 @@
 #include "prj_cfg.h"
 #include <drv/drv_api.h>
 #include <drv/chip/pic24fj/drv_uart.h>
+#include <drv/chip/pic24fj/drv_common.h>
 
 int g_fd_uart0 = -1;
 
 void App_Initialize(){
     struct termios2 opt;
-    UINT32 u32Val;
+    struct UART_MAP_PIN map_pin;
+    struct COMMON_SET_OSC osc;
     
+    drv_commonInitialize();
+    // Common DRV
+    osc.frc         = 8000000L;
+    osc.primary     = 25000000L;
+    osc.secondary   = 25000000L;
+    osc.low_power   = 31000L;
+    ioctl(FD_COMMON, COMMON_IOCTL_SET_OSC_FREQ, (unsigned int)&osc);
+    // UART DRV
     drv_uartInitialize();
-    
     g_fd_uart0 = open("uart0", 0);
-    u32Val = FREQ_OSC * FREQ_PLL / FREQ_DIV / 2;
-    ioctl(g_fd_uart0, UART_IOCTL_SET_FCY, (unsigned int)&u32Val);
     ioctl(g_fd_uart0, TCGETS2, (unsigned int)&opt);
     opt.c_ispeed = 9600;
     opt.c_ospeed = 9600;
@@ -23,6 +30,9 @@ void App_Initialize(){
     opt.c_cflag &= ~PARENB;
     opt.c_iflag &= ~INPCK;
     ioctl(g_fd_uart0, TCSETS2, (unsigned int)&opt);
+    map_pin.rx = 6; // RP6 as RX
+    map_pin.tx = 7; // PR7 as TX
+    ioctl(g_fd_uart0, UART_IOCTL_MAP_PIN, (unsigned int)&map_pin);
     
 }
 void frw_debugPrint(const void* sz){

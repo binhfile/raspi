@@ -10,5 +10,7 @@
 #define UART_REG_TXREG          0x04
 #define UART_REG_RXREG          0x06
 #define UART_REG_BRG            0x08
-
+/*--- MAP PIN ---*/
+#define RPIN_REG_BASE_ADDRESS    0x0680
+#define RPO_REG_BASE_ADDRESS     0x06C0
 #endif

@@ -1,12 +1,13 @@
 #include "drv_uart.h"
 #include "drv_regs.h"
+#include "drv_perimap.h"
+#include "drv_utils.h"
 #include "../../drv_api.h"
 #include <frw_string.h>
-#include <p24FJ128GA106.h>
+#include <xc.h>
 
 struct DRV_UART{
     int         index;
-    UINT32      Fcy;
     DRV_ELEM    drv;
 };
 //const char          *g_uart_name[] = {"uart0"};
@@ -65,10 +66,10 @@ int drv_uart_open(void *drv, int flags){
                          */
     /* BRG = Fcy / 16 / Baudrate - 1, Fcy = FOSC / 2 (FRC)
      */
-    REG(base_reg + UART_REG_BRG)  = 25;// Default 9600@8Mhz 
+//    REG(base_reg + UART_REG_BRG)  = 25;// Default 9600@8Mhz 
     // Map pin
-    RPINR18bits.U1RXR   = 6;    // RP6
-    RPOR3bits.RP7R      = 3;    // RP7
+//    RPINR18bits.U1RXR   = 6;    // RP6
+//    RPOR3bits.RP7R      = 3;    // RP7
     IEC0bits.U1RXIE = 0;
     IEC0bits.U1TXIE = 0;
     IEC4bits.U1ERIE = 0;
@@ -135,8 +136,9 @@ int drv_uart_ioctl(void *drv, int request, unsigned int arguments){
     int ret = -1;
     struct termios2 *opt;
     struct DRV_UART* _drv;
+    struct UART_MAP_PIN *map_pin;
     UINT32 u32Val;
-    unsigned int base_reg;
+    unsigned int base_reg, offset;
 
     _drv = container_of(drv, struct DRV_UART, drv);
     if(_drv->index < 0 || _drv->index > UART_MODULE_COUNT)
@@ -149,14 +151,15 @@ int drv_uart_ioctl(void *drv, int request, unsigned int arguments){
     }else if(request == TCSETS2){
         opt = (struct termios2*)arguments;
         if((REG(base_reg+UART_REG_MODE) & ((unsigned int)0x01 << 3)) != 0)
-            u32Val = _drv->Fcy / 4 / opt->c_ispeed - 1;
+            u32Val = drv_getCpuClockFreq() / 4 / opt->c_ispeed - 1;
         else 
-            u32Val = _drv->Fcy / 16 / opt->c_ispeed - 1;
+            u32Val = drv_getCpuClockFreq() / 16 / opt->c_ispeed - 1;
         REG(base_reg + UART_REG_BRG) = (unsigned int)u32Val & 0xffff;
         ret = 0;
-    }else if(request == UART_IOCTL_SET_FCY){
-        u32Val = *((UINT32*)arguments);
-        _drv->Fcy = u32Val;
+    }else if(request == UART_IOCTL_MAP_PIN){
+        map_pin = (struct UART_MAP_PIN*)arguments;        
+        DRV_PERI_INPUT_MAP(DRV_PERIMAP_INPUT_U1RX, map_pin->rx);
+        DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_U1TX, map_pin->tx);
         ret = 0;
     }
     return ret;
@@ -165,7 +168,6 @@ int drv_uart_ioctl(void *drv, int request, unsigned int arguments){
 const char          *g_uart_name[DRV_UART_MODULE_CNT] = {"uart0"};
 struct DRV_UART     g_uart[DRV_UART_MODULE_CNT] = {
     {
-      .Fcy = 8000000L,
       .index            = 0,  
       .drv.opt.open     = drv_uart_open,
       .drv.opt.close    = drv_uart_close,
