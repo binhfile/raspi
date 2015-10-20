@@ -20,7 +20,7 @@
 */
 
 #define  CPU_PRIMARY_OSC_FRQ         8000000L                               /* Primary External Oscillator Frequency                */
-#define  CPU_FRC_OSC_FRQ             7370000L                               /* Internal Fast Oscillator Frequency                   */
+#define  CPU_FRC_OSC_FRQ             8000000L                               /* Internal Fast Oscillator Frequency                   */
 #define  CPU_SECONDARY_OSC_FRQ         32768L                               /* Secondary External Oscillator Frequency              */
 #define  CPU_LOW_POWER_OSC_FRQ         31000L                           /* Low Power Oscillator (LPOSC) 31Khz Nominal               */
 
@@ -110,17 +110,6 @@ void        BSP_IntDis(CPU_INT08U IntCont, CPU_INT08U IntNum);
 void        BSP_IntDisAll(void);
 
 CPU_INT32U  BSP_CPU_ClkFrq(void);
-
-/*
-*********************************************************************************************************
-*                                          LED SERVICES
-*********************************************************************************************************
-*/
-
-void     LED_Init(void);
-void     LED_On(CPU_INT08U led);
-void     LED_Off(CPU_INT08U led);
-void     LED_Toggle(CPU_INT08U led);
 
 /*
 *********************************************************************************************************
