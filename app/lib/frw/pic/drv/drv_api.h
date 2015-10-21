@@ -11,6 +11,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+
 #include "drv_errno.h"
 #ifndef ssize_t
 #define ssize_t     int
@@ -114,6 +115,10 @@ extern "C" {
     
     #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
     #define container_of(ptr, type, member) (type *)(((size_t)ptr) - offsetof(type, member))
+    typedef void (*drv_init_fxn)();
+
+#define DRV_INIT(fxn) drv_init_fxn drv_init_##fxn __attribute__((__section__(".drv_init"))) = fxn
+#define DRV_OPTS(opts) void* drv_opts_##opts __attribute__((__section__(".drv_opts"))) = &opts
 
 #ifdef	__cplusplus
 }

@@ -169,5 +169,5 @@ struct termios2 {
 #define IEXTEN	0100000
 #define EXTPROC	0200000
 
-int drv_uartInitialize();
+void drv_uartInitialize();
 #endif

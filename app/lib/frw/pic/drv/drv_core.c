@@ -2,14 +2,19 @@
 #include "drv_errno.h"
 #include "../frw_string.h"
 
-DRV_ELEM    *g_drvs[DRV_CORE_MAX_DEVICE] = {0};
-int          g_drvCnt = 0;
+//DRV_ELEM    *g_drvs[DRV_CORE_MAX_DEVICE] = {0};
+//int          g_drvCnt = 0;
 int          errno = 0;
+
+extern DRV_ELEM __drv_opts_begin;
+extern DRV_ELEM __drv_opts_end;
 
 DRV_ELEM* drv_findByName(const char* pathname){
     DRV_ELEM* ret = 0;
     int i = 0;
     int found = 0;
+    
+
     if(pathname){
         while(i < g_drvCnt){
             if(strcmp(g_drvs[i]->name, pathname) == 0){
@@ -24,6 +29,18 @@ DRV_ELEM* drv_findByName(const char* pathname){
             errno = EEXIST;
         }
     }else errno = EINVAL;
+    return ret;
+}
+int drv_findFd(DRV_ELEM* drv){
+    int ret = -1;
+    int i = 0;
+    while(i < g_drvCnt){
+        if(g_drvs[i] == drv){
+            ret = i;
+            break;
+        }
+        i++;
+    }
     return ret;
 }
 DRV_ELEM* drv_findByFd(int fd){
@@ -49,6 +66,7 @@ int drv_register(DRV_ELEM* drv){
         if(found == 0){
             g_drvs[g_drvCnt] = drv;
             g_drvCnt ++;
+            ret = 0;
         }else ret = EEXIST;
     }else ret = EINVAL;
     errno = ret;
@@ -60,8 +78,12 @@ int open(const char *pathname, int flags){
     
     drv = drv_findByName(pathname);
     if(drv != 0){
-        if(drv->opt.open)
+        if(drv->opt.open){
             ret = drv->opt.open(drv, flags);
+            if(ret == 0){
+                ret = drv_findFd(drv);
+            }
+        }
         else {
             ret = -EPERM;
         }

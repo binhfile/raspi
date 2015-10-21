@@ -7,8 +7,8 @@
 #include <xc.h>
 
 struct DRV_UART{
-    int         index;
     DRV_ELEM    drv;
+    int         index;
 };
 //const char          *g_uart_name[] = {"uart0"};
 //struct DRV_UART     g_uart[1];
@@ -138,7 +138,7 @@ int drv_uart_ioctl(void *drv, int request, unsigned int arguments){
     struct DRV_UART* _drv;
     struct UART_MAP_PIN *map_pin;
     UINT32 u32Val;
-    unsigned int base_reg, offset;
+    unsigned int base_reg;
 
     _drv = container_of(drv, struct DRV_UART, drv);
     if(_drv->index < 0 || _drv->index > UART_MODULE_COUNT)
@@ -157,32 +157,44 @@ int drv_uart_ioctl(void *drv, int request, unsigned int arguments){
         REG(base_reg + UART_REG_BRG) = (unsigned int)u32Val & 0xffff;
         ret = 0;
     }else if(request == UART_IOCTL_MAP_PIN){
-        map_pin = (struct UART_MAP_PIN*)arguments;        
-        DRV_PERI_INPUT_MAP(DRV_PERIMAP_INPUT_U1RX, map_pin->rx);
-        DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_U1TX, map_pin->tx);
+        map_pin = (struct UART_MAP_PIN*)arguments;
         ret = 0;
+        DRV_UNLOCK_REG;
+        if(_drv->index == 0){
+            DRV_PERI_INPUT_MAP(DRV_PERIMAP_INPUT_U1RX, map_pin->rx);
+            DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_U1TX, map_pin->tx);
+        }else if(_drv->index == 1){
+            DRV_PERI_INPUT_MAP(DRV_PERIMAP_INPUT_U2RX, map_pin->rx);
+            DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_U2TX, map_pin->tx);
+        }else if(_drv->index == 2){
+            DRV_PERI_INPUT_MAP(DRV_PERIMAP_INPUT_U3RX, map_pin->rx);
+            DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_U3TX, map_pin->tx);
+        }else if(_drv->index == 3){
+            DRV_PERI_INPUT_MAP(DRV_PERIMAP_INPUT_U4RX, map_pin->rx);
+            DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_U4TX, map_pin->tx);
+        }else ret = -1;
+        DRV_LOCK_REG;
     }
     return ret;
 }
-#define DRV_UART_MODULE_CNT    1
-const char          *g_uart_name[DRV_UART_MODULE_CNT] = {"uart0"};
-struct DRV_UART     g_uart[DRV_UART_MODULE_CNT] = {
-    {
-      .index            = 0,  
-      .drv.opt.open     = drv_uart_open,
-      .drv.opt.close    = drv_uart_close,
-      .drv.opt.read     = drv_uart_read,
-      .drv.opt.write    = drv_uart_write,
-      .drv.opt.ioctl    = drv_uart_ioctl,
-    },
+#define DRV_UART_MODULE_CNT    4
+const char          *g_uart_name[DRV_UART_MODULE_CNT] = {"uart0", "uart1", "uart2", "uart3"};
+struct DRV_UART     g_uart_0 = {
+        .index            = 0,
+        .drv.opt.open     = drv_uart_open,
+        .drv.opt.close    = drv_uart_close,
+        .drv.opt.read     = drv_uart_read,
+        .drv.opt.write    = drv_uart_write,
+        .drv.opt.ioctl    = drv_uart_ioctl,
 };
-int drv_uartInitialize(){
-    int ret = 0, i;  
-    
-    for(i = 0; i < DRV_UART_MODULE_CNT; i++){
-        g_uart[i].drv.name = g_uart_name[i];
-        drv_register(&g_uart[i].drv);
-    }
-    return ret;
+void drv_uartInitialize(){   
+    g_uart_0.drv.name         = g_uart_name[0];
+    drv_register(&g_uart_0.drv);
 }
+DRV_INIT(drv_uartInitialize);
+DRV_OPTS(g_uart_0);
+//DRV_OPTS(g_uart_1);
+//DRV_OPTS(g_uart_2);
+//DRV_OPTS(g_uart_3);
+//drv_init_fxn drv_uart_init __attribute__((__section__(".drv_init"))) = drv_uartInitialize;
 // end of file

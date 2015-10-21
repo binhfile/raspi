@@ -5,13 +5,17 @@
 #include <drv/chip/pic24fj/drv_common.h>
 
 int g_fd_uart0 = -1;
-
+void App_Error(){
+    while(1){
+        LATEbits.LATE6 = 0;
+    }
+}
 void App_Initialize(){
     struct termios2 opt;
     struct UART_MAP_PIN map_pin;
     struct COMMON_SET_OSC osc;
-    
-    drv_commonInitialize();
+
+    drv_initialize();   // Load all driver is link
     // Common DRV
     osc.frc         = 8000000L;
     osc.primary     = 25000000L;
@@ -19,8 +23,8 @@ void App_Initialize(){
     osc.low_power   = 31000L;
     ioctl(FD_COMMON, COMMON_IOCTL_SET_OSC_FREQ, (unsigned int)&osc);
     // UART DRV
-    drv_uartInitialize();
     g_fd_uart0 = open("uart0", 0);
+    if(g_fd_uart0 < 0) App_Error();
     ioctl(g_fd_uart0, TCGETS2, (unsigned int)&opt);
     opt.c_ispeed = 9600;
     opt.c_ospeed = 9600;
@@ -30,8 +34,8 @@ void App_Initialize(){
     opt.c_cflag &= ~PARENB;
     opt.c_iflag &= ~INPCK;
     ioctl(g_fd_uart0, TCSETS2, (unsigned int)&opt);
-    map_pin.rx = 6; // RP6 as RX
-    map_pin.tx = 7; // PR7 as TX
+    map_pin.rx = 7;
+    map_pin.tx = 6;
     ioctl(g_fd_uart0, UART_IOCTL_MAP_PIN, (unsigned int)&map_pin);
     
 }

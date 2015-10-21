@@ -17,7 +17,7 @@ extern "C" {
 /*--- ioctl ----*/
 #define COMMON_IOCTL_SET_OSC_FREQ    0x01    // arg=&COMMON_SET_OSC
     
-int drv_commonInitialize();
+int drv_initialize();
 
 UINT32 drv_commonGetFRCFreq();
 UINT32 drv_commonGetPrimaryFreq();

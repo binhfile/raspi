@@ -21,7 +21,7 @@ void lib_debugSetCallback(DEBUG_CALLBACK fxn, void* obj);
 #define DUMP	lib_debugDump
 #define LREP_WARN(x, args...)	lib_debugPrint("warn:" x, ##args)
 #define LREP_ERR(x, args...)	lib_debugPrint("err :" x, ##args)
-#elif defined(__XC__)
+#elif defined(__XC16__)
 //extern void lib_debugPrintInt16(INT16 x);
 //extern void lib_debugPrintUint16(UINT16 x);
 //extern void lib_debugPrintHexa(UINT32 x);

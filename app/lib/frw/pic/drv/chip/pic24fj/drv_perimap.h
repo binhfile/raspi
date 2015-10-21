@@ -115,7 +115,7 @@ extern "C" {
 #define DRV_PERI_OUTPUT_MAP(peri_sel, pin_sel){\
         REG((RPO_REG_BASE_ADDRESS + (((unsigned int)pin_sel >> 1) << 1))) = \
             (REG((RPO_REG_BASE_ADDRESS + (((unsigned int)pin_sel >> 1) << 1))) & \
-            (((unsigned int)0x3F << ((pin_sel & 0x01) ? 8 : 0)))) & \
+            (((unsigned int)0x3F << ((pin_sel & 0x01) ? 8 : 0)))) | \
             ((unsigned int)peri_sel << ((pin_sel & 0x01) ? 8 : 0)); \
     }
 #ifdef	__cplusplus

@@ -54,9 +54,9 @@ static  void  AppStartTask2 (void *p_arg)
     int cnt = 0;
     while(1){
         LATEbits.LATE6   = 1;
-        OSTimeDlyHMSM(0, 0, 0, 5);
+        OSTimeDlyHMSM(0, 0, 0, 200);
         LATEbits.LATE6   = 0;
-        OSTimeDlyHMSM(0, 0, 0, 5); 
+        OSTimeDlyHMSM(0, 0, 0, 200);
         cnt++;
     }
 }

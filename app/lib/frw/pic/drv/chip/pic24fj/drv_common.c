@@ -50,9 +50,17 @@ struct DRV_COMMON     g_common = {
     .drv.opt.write    = drv_common_write,
     .drv.opt.ioctl    = drv_common_ioctl,
 };
-int drv_commonInitialize(){
+DRV_OPTS(g_common);
+extern drv_init_fxn __drv_init_begin, __drv_init_end;
+int drv_initialize(){
+    drv_init_fxn *fxn;
     g_common.drv.name = g_common_name;
     drv_register(&g_common.drv);
+    fxn = &__drv_init_begin;
+    while(fxn < &__drv_init_end){
+        (*fxn)();
+        fxn++;
+    }
     return 0;
 }
 UINT32 drv_commonGetFRCFreq(){

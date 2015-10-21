@@ -19,6 +19,9 @@ extern "C" {
 #define  DRV_PLLDIV_MASK                (UINT16)(0xFF <<  0)
 #define  DRV_COSC_MASK                  (UINT16)(7 << 12)
 
+#define DRV_UNLOCK_REG  {OSCCONbits.IOLOCK = 0;}
+#define DRV_LOCK_REG  {OSCCONbits.IOLOCK = 1;}
+
 UINT32  drv_getCpuClockFreq (void);
 #ifdef	__cplusplus
 }
