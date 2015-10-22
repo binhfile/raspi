@@ -7,6 +7,8 @@
 #define UART_IOCTL_MAP_PIN  0x03    // args = &struct UART_MAP_PIN
 /*------ ioctl arguments ----*/
 struct UART_MAP_PIN{
+    /* note: use RPx pin
+     */
     char tx;
     char rx;
     char cts;
@@ -169,5 +171,5 @@ struct termios2 {
 #define IEXTEN	0100000
 #define EXTPROC	0200000
 
-void drv_uartInitialize();
+int drv_uart_init();
 #endif

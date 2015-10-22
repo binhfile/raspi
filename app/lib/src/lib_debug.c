@@ -12,6 +12,7 @@
 DEBUG_CALLBACK	g_debug_callback_fxn = 0;
 void*			g_debug_callback_obj = 0;
 extern void     frw_debugPrint(const void* sz);
+extern int	vsnprintf(char *str, size_t size, const char *format, va_list ap);
 void lib_debugSetCallback(DEBUG_CALLBACK fxn, void* obj){
 	g_debug_callback_fxn = fxn;
 	g_debug_callback_obj = obj;

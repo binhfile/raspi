@@ -1,4 +1,5 @@
 #include "drv_common.h"
+#include "../../../frw_string.h"
 typedef struct {
     UINT32      frc;
     UINT32      primary;
@@ -16,12 +17,6 @@ int drv_common_open(void *drv, int flags){
 int drv_common_close(void *drv){
     return -1;
 }
-ssize_t drv_common_read(void *drv, void* buf, size_t count){
-    return -1;
-}
-ssize_t drv_common_write(void *drv, const void* buf, size_t count){
-    return -1;    
-}
 int drv_common_ioctl(void *drv, int request, unsigned int arguments){
     int ret = -1;
     struct DRV_COMMON* _drv;
@@ -38,41 +33,33 @@ int drv_common_ioctl(void *drv, int request, unsigned int arguments){
     }
     return ret;
 }
-const char            g_common_name[] = "common";
-struct DRV_COMMON     g_common = {
+const char            g_drv_common_name[] = "common";
+struct DRV_COMMON     g_drv_common = {
     .osc.frc          = 0,  
     .osc.low_power    = 0,  
     .osc.primary      = 0,  
-    .osc.secondary    = 0,                
+    .osc.secondary    = 0,  
+    .drv.opt.init     = drv_common_init,
     .drv.opt.open     = drv_common_open,
     .drv.opt.close    = drv_common_close,
-    .drv.opt.read     = drv_common_read,
-    .drv.opt.write    = drv_common_write,
     .drv.opt.ioctl    = drv_common_ioctl,
 };
-DRV_OPTS(g_common);
-extern drv_init_fxn __drv_init_begin, __drv_init_end;
-int drv_initialize(){
-    drv_init_fxn *fxn;
-    g_common.drv.name = g_common_name;
-    drv_register(&g_common.drv);
-    fxn = &__drv_init_begin;
-    while(fxn < &__drv_init_end){
-        (*fxn)();
-        fxn++;
-    }
+int drv_common_init(){
+    memset(&g_drv_common, 0, sizeof(g_drv_common));
+    g_drv_common.drv.name = g_drv_common_name;
     return 0;
 }
+DRV_REGISTER(g_drv_common);
 UINT32 drv_commonGetFRCFreq(){
-    return g_common.osc.frc;
+    return g_drv_common.osc.frc;
 }
 UINT32 drv_commonGetPrimaryFreq(){
-    return g_common.osc.primary;
+    return g_drv_common.osc.primary;
 }
 UINT32 drv_commonGetSecondaryFreq(){
-    return g_common.osc.secondary;
+    return g_drv_common.osc.secondary;
 }
 UINT32 drv_commonGetLowpowerFreq(){
-    return g_common.osc.low_power;
+    return g_drv_common.osc.low_power;
 }
 // end of file

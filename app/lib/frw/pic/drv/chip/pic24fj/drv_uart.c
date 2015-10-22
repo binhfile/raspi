@@ -10,9 +10,6 @@ struct DRV_UART{
     DRV_ELEM    drv;
     int         index;
 };
-//const char          *g_uart_name[] = {"uart0"};
-//struct DRV_UART     g_uart[1];
-
 int drv_uart_open(void *drv, int flags){
     int ret = -1;
     struct DRV_UART* _drv;
@@ -178,23 +175,59 @@ int drv_uart_ioctl(void *drv, int request, unsigned int arguments){
     return ret;
 }
 #define DRV_UART_MODULE_CNT    4
-const char          *g_uart_name[DRV_UART_MODULE_CNT] = {"uart0", "uart1", "uart2", "uart3"};
-struct DRV_UART     g_uart_0 = {
+const char          *g_drv_uart_name[DRV_UART_MODULE_CNT] = {"uart0", "uart1", "uart2", "uart3"};
+struct DRV_UART     g_drv_uart_0 = {
         .index            = 0,
+        .drv.opt.init     = drv_uart_init,
         .drv.opt.open     = drv_uart_open,
         .drv.opt.close    = drv_uart_close,
         .drv.opt.read     = drv_uart_read,
         .drv.opt.write    = drv_uart_write,
         .drv.opt.ioctl    = drv_uart_ioctl,
 };
-void drv_uartInitialize(){   
-    g_uart_0.drv.name         = g_uart_name[0];
-    drv_register(&g_uart_0.drv);
+#if 0
+struct DRV_UART     g_uart_1 = {
+        .index            = 1,
+        .drv.opt.init     = drv_uart_init,
+        .drv.opt.open     = drv_uart_open,
+        .drv.opt.close    = drv_uart_close,
+        .drv.opt.read     = drv_uart_read,
+        .drv.opt.write    = drv_uart_write,
+        .drv.opt.ioctl    = drv_uart_ioctl,
+};
+struct DRV_UART     g_uart_2 = {
+        .index            = 2,
+        .drv.opt.init     = drv_uart_init,
+        .drv.opt.open     = drv_uart_open,
+        .drv.opt.close    = drv_uart_close,
+        .drv.opt.read     = drv_uart_read,
+        .drv.opt.write    = drv_uart_write,
+        .drv.opt.ioctl    = drv_uart_ioctl,
+};
+struct DRV_UART     g_uart_3 = {
+        .index            = 3,
+        .drv.opt.init     = drv_uart_init,
+        .drv.opt.open     = drv_uart_open,
+        .drv.opt.close    = drv_uart_close,
+        .drv.opt.read     = drv_uart_read,
+        .drv.opt.write    = drv_uart_write,
+        .drv.opt.ioctl    = drv_uart_ioctl,
+};
+#endif
+int drv_uart_init(){   
+    memset(&g_drv_uart_0, 0, sizeof(g_drv_uart_0));
+    g_drv_uart_0.drv.name         = g_drv_uart_name[0];
+#if 0
+    g_uart_1.drv.name         = g_uart_name[1];
+    g_uart_2.drv.name         = g_uart_name[2];
+    g_uart_3.drv.name         = g_uart_name[3];
+#endif
+    return 0;
 }
-DRV_INIT(drv_uartInitialize);
-DRV_OPTS(g_uart_0);
-//DRV_OPTS(g_uart_1);
-//DRV_OPTS(g_uart_2);
-//DRV_OPTS(g_uart_3);
-//drv_init_fxn drv_uart_init __attribute__((__section__(".drv_init"))) = drv_uartInitialize;
+DRV_REGISTER(g_drv_uart_0);
+#if 0
+DRV_REGISTER(g_uart_1);
+DRV_REGISTER(g_uart_2);
+DRV_REGISTER(g_uart_3);
+#endif
 // end of file

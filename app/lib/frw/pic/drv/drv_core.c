@@ -1,87 +1,86 @@
 #include "drv_api.h"
 #include "drv_errno.h"
 #include "../frw_string.h"
+#include "chip/pic24fj/drv_common.h"
+int      errno = 0;
+extern DRV_ELEM __drv_end;
 
-//DRV_ELEM    *g_drvs[DRV_CORE_MAX_DEVICE] = {0};
-//int          g_drvCnt = 0;
-int          errno = 0;
-
-extern DRV_ELEM __drv_opts_begin;
-extern DRV_ELEM __drv_opts_end;
-
-DRV_ELEM* drv_findByName(const char* pathname){
+DRV_ELEM* drv_findDrvByName(const char* pathname){
     DRV_ELEM* ret = 0;
-    int i = 0;
-    int found = 0;
-    
-
-    if(pathname){
-        while(i < g_drvCnt){
-            if(strcmp(g_drvs[i]->name, pathname) == 0){
-                found = 1;
-                break;
-            }
-            i++;
+    DRV_ELEM *elem;
+    elem = &__drv_begin;
+    while(elem < &__drv_end){
+        if(strcmp((*elem).name, pathname) == 0){
+            ret = elem;
+            break;
         }
-        if(found){
-            ret = g_drvs[i];
-        }else{
-            errno = EEXIST;
-        }
-    }else errno = EINVAL;
+        elem++;
+    }
     return ret;
 }
-int drv_findFd(DRV_ELEM* drv){
+int drv_findFdByName(const char* pathname){
     int ret = -1;
+    DRV_ELEM *elem;
     int i = 0;
-    while(i < g_drvCnt){
-        if(g_drvs[i] == drv){
+    elem = &__drv_begin;
+    while(elem < &__drv_end){
+        if(strcmp((*elem).name, pathname) == 0){
             ret = i;
             break;
         }
+        elem++;
         i++;
     }
     return ret;
 }
-DRV_ELEM* drv_findByFd(int fd){
-    if(fd >= 0 && fd < g_drvCnt){
-        return g_drvs[fd];
+int drv_findFdByDrv(DRV_ELEM* drv){
+    int ret = -1;
+    DRV_ELEM *elem;
+    int i = 0;
+    elem = &__drv_begin;
+    
+    while(elem < &__drv_end){
+        if(elem == drv){
+            ret = i;
+            break;
+        }
+        elem++;
+        i++;
+    }
+    return ret;
+}
+DRV_ELEM* drv_findDrvByFd(int fd){
+    DRV_ELEM *elem;
+    elem = &__drv_begin;
+    
+    while(fd >= 0 && elem < &__drv_end){
+        if(fd == 0){
+            return elem;
+        }
+        fd --;
+        elem ++;
     }
     return 0;
 }
-int drv_register(DRV_ELEM* drv){
-    int ret = EPERM;
-    int found = 0;
-    int i;
-    if(drv){
-        // search device
-        i = 0;
-        while(i < g_drvCnt){
-            if(g_drvs[i] == drv){
-                found = 1;
-                break;
-            }
-            i++;
-        }
-        if(found == 0){
-            g_drvs[g_drvCnt] = drv;
-            g_drvCnt ++;
-            ret = 0;
-        }else ret = EEXIST;
-    }else ret = EINVAL;
-    errno = ret;
-    return -ret;
+int drv_initialize(){
+    DRV_ELEM *elem;
+    elem = &__drv_begin;
+    while(elem < &__drv_end){
+        (*elem).opt.init();
+        elem++;
+    }
+    return 0;
 }
 int open(const char *pathname, int flags){
     int ret = -EPERM;
     DRV_ELEM* drv = 0;
     
-    drv = drv_findByName(pathname);
+    drv = drv_findDrvByName(pathname);
     if(drv != 0){
         if(drv->opt.open){
             ret = drv->opt.open(drv, flags);
             if(ret == 0){
-                ret = drv_findFd(drv);
+                ret = drv_findFdByDrv(drv);
             }
         }
         else {
@@ -98,7 +97,7 @@ int close(int fd){
     int ret = -EPERM;
     DRV_ELEM* drv = 0;
     
-    drv = drv_findByFd(fd);
+    drv = drv_findDrvByFd(fd);
     if(drv != 0){
         if(drv->opt.close)
             ret = drv->opt.close(drv);
@@ -110,36 +109,4 @@ int close(int fd){
     }
     return ret;
 }
-//ssize_t read(int fd, void* buf, size_t count){
-//    return ((DRV_ELEM* )(g_drvHead + fd))->opt->read((g_drvHead + fd), buf, count);
-//}
-//ssize_t write(int fd, void* buf, size_t count){
-//    ssize_t ret = -1;
-//    DRV_ELEM* drv = 0;
-//    
-//    drv = drv_findFromFd(fd);
-//    if(drv != 0){
-//        if(drv->opt->write)
-//            ret = drv->opt->write(drv, buf, count);
-//        else
-//            errno = EPERM;
-//    }else{
-//        errno = ENXIO;
-//    }
-//    return ret;
-//}
-//int ioctl(int fd, int request, unsigned int arguments){
-//    int ret = -1;
-//    DRV_ELEM* drv = 0;
-//    
-//    drv = drv_findFromFd(fd);
-//    if(drv != 0){
-//        if(drv->opt->ioctl)
-//            ret = drv->opt->ioctl(drv, request, arguments);
-//        else
-//            errno = EPERM;
-//    }else
-//        errno = ENXIO;
-//    return ret;
-//}
 //end of file

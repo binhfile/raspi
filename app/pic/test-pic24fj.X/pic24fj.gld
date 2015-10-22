@@ -78,18 +78,11 @@ SECTIONS
   ** ========== Program Memory ==========
   */
 
-  .drv_init :
+  .drv :
   {
-        ___drv_init_begin = .;
-        *(.drv_init)
-        ___drv_init_end = .;
-  } >data
-
-  .drv_opts :
-  {
-        ___drv_opts_begin = .;
-        *(.drv_opts)
-        ___drv_opts_end = .;
+        ___drv_begin = .;
+        *(.drv)
+        ___drv_end = .;
   } >data
 
   /*

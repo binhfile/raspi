@@ -14,6 +14,7 @@ void App_Initialize(){
     struct termios2 opt;
     struct UART_MAP_PIN map_pin;
     struct COMMON_SET_OSC osc;
+    int fd;
 
     drv_initialize();   // Load all driver is link
     // Common DRV
@@ -21,7 +22,8 @@ void App_Initialize(){
     osc.primary     = 25000000L;
     osc.secondary   = 25000000L;
     osc.low_power   = 31000L;
-    ioctl(FD_COMMON, COMMON_IOCTL_SET_OSC_FREQ, (unsigned int)&osc);
+    fd = drv_findFdByName("common");
+    ioctl(fd, COMMON_IOCTL_SET_OSC_FREQ, (unsigned int)&osc);
     // UART DRV
     g_fd_uart0 = open("uart0", 0);
     if(g_fd_uart0 < 0) App_Error();

@@ -13,4 +13,19 @@
 /*--- MAP PIN ---*/
 #define RPIN_REG_BASE_ADDRESS    0x0680
 #define RPO_REG_BASE_ADDRESS     0x06C0
+/*--- GPIO ----*/
+#define GPIO_REG_BASE_ADDR      0x02C0
+#define GPIO_REG_MODULE_LEN     0x08
+#define GPIO_REG_TRIS           0x00
+#define GPIO_REG_PORT           0x02
+#define GPIO_REG_LAT            0x04
+#define GPIO_REG_ODC            0x06
+/*--- ADC ---*/
+#define ADC_REG_BASE_ADDR       0x0300
+#define ADC_REG_AD1PCFGL        0x002C
+/*---- ICN ----*/
+#define ICN_REG_BASE_ADDR       0x0054
+#define ICN_REG_CNPD            0x00
+#define ICN_REG_CNEN            0x0C
+#define ICN_REG_CNPU            0x18
 #endif

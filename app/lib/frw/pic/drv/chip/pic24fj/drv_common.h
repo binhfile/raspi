@@ -13,12 +13,11 @@ extern "C" {
 #endif
 #include "../../drv_api.h"
     
-#define FD_COMMON   0
+int drv_common_init();
+    
 /*--- ioctl ----*/
 #define COMMON_IOCTL_SET_OSC_FREQ    0x01    // arg=&COMMON_SET_OSC
     
-int drv_initialize();
-
 UINT32 drv_commonGetFRCFreq();
 UINT32 drv_commonGetPrimaryFreq();
 UINT32 drv_commonGetSecondaryFreq();

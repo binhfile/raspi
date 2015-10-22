@@ -4,6 +4,9 @@
  *
  * Created on October 19, 2015, 11:19 AM
  */
+/*
+  gen deassambly file : xc16-objdump -S test-pic24fj.X.production.elf > test.lst
+ */
 
 #include <includes.h>
 #include "xc.h"
