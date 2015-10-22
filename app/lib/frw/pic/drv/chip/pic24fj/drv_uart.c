@@ -215,7 +215,6 @@ struct DRV_UART     g_uart_3 = {
 };
 #endif
 int drv_uart_init(){   
-    memset(&g_drv_uart_0, 0, sizeof(g_drv_uart_0));
     g_drv_uart_0.drv.name         = g_drv_uart_name[0];
 #if 0
     g_uart_1.drv.name         = g_uart_name[1];

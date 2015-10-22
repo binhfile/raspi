@@ -150,25 +150,25 @@ enum DRV_GPIO_VALUE{
 #define DRV_GPIO_IOCTL_READ         0x03 // read gpio pin value, arg = &DRV_GPIO_READ
 #define DRV_GPIO_IOCTL_SET_ICN      0x04 // Set input change notitication arg = &DRV_GPIO_INPUT_CHANGE_NOTIFICATION
 
-typedef struct{
+struct DRV_GPIO_ENABLE{
     unsigned int pin;    // Pin id = Port_offset * 16 + pin_offset, use R(A/B/C/D/E/F/G)x pin
     unsigned int dir;    // Direction, 0-output, 1-input
     unsigned int opendrain;  // 1- set output open drain
-}DRV_GPIO_ENABLE;
-typedef struct{
+};
+struct DRV_GPIO_WRITE{
     unsigned int pin;   // Pin id = Port_offset * 16 + pin_offset, use R(A/B/C/D/E/F/G)x pin
     unsigned int value;
-}DRV_GPIO_WRITE;
-typedef struct{
+};
+struct DRV_GPIO_READ{
     unsigned int pin;   // Pin id = Port_offset * 16 + pin_offset, use R(A/B/C/D/E/F/G)x pin
     unsigned int value;
-}DRV_GPIO_READ;
-typedef struct{
+};
+struct DRV_GPIO_INPUT_CHANGE_NOTIFICATION{
     unsigned int cn_pin;    // use CNx pin
     unsigned int enable;    // 0-disable
     unsigned int pull_up;   // 0-disable
     unsigned int pull_down; // 0-disable
-}DRV_GPIO_INPUT_CHANGE_NOTIFICATION;
+};
 #ifdef	__cplusplus
 }
 #endif

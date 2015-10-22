@@ -18,12 +18,14 @@
 #define UINT32      unsigned int
 #elif defined(__XC__)
 #include <stdint.h>
+#ifndef INT8
 #define INT8        int8_t
 #define UINT8       uint8_t
 #define INT16       int16_t
 #define UINT16      uint16_t
 #define INT32       int32_t
 #define UINT32      uint32_t
+#endif
 #define DEBUG_BUFSIZE   32
 #endif
 

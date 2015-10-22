@@ -29,6 +29,18 @@ struct COMMON_SET_OSC{
     UINT32      secondary;
     UINT32      low_power;
 };
+
+typedef struct {
+    UINT32      frc;
+    UINT32      primary;
+    UINT32      secondary;
+    UINT32      low_power;
+}DRV_COMMON_OSC;
+struct DRV_COMMON {
+    DRV_ELEM    drv;
+    DRV_COMMON_OSC  osc;
+};
+
 #ifdef	__cplusplus
 }
 #endif

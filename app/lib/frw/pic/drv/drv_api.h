@@ -67,7 +67,7 @@ typedef struct{
 }DRV_ELEM;
 
 extern int errno;
-extern DRV_ELEM     __drv_begin;
+extern DRV_ELEM     *__drv_begin;
 
 int drv_initialize();
 int drv_findFdByName(const char* pathname);
@@ -93,7 +93,7 @@ int close(int fd);
  */
 //    ssize_t read(int fd, void* buf, size_t count);
 #define read(fd, buf, count) \
-    (*(((DRV_ELEM*)(&__drv_begin)) + fd)).opt.read((((DRV_ELEM*)(&__drv_begin)) + fd), buf, count)
+    (*(((DRV_ELEM**)(&__drv_begin)) + fd))->opt.read(*(((DRV_ELEM**)(&__drv_begin)) + fd), buf, count)
     /**
      * @brief Writes  up  to count bytes from the buffer pointed buf to the file referred to by the file descriptor fd.
      * @param fd        File descriptor
@@ -103,7 +103,7 @@ int close(int fd);
      */
 //    ssize_t write(int fd, void* buf, size_t count);
 #define write(fd, buf, count) \
-    (*(((DRV_ELEM*)(&__drv_begin)) + fd)).opt.write((((DRV_ELEM*)(&__drv_begin)) + fd), buf, count)
+    (*(((DRV_ELEM**)(&__drv_begin)) + fd))->opt.write(*(((DRV_ELEM**)(&__drv_begin)) + fd), buf, count)
     /**
      * @brief Function manipulates the underlying device parameters of special files.
      * @param fd        File descriptor
@@ -115,10 +115,10 @@ int close(int fd);
      */ 
 //    int ioctl(int fd, int request, unsigned int arguments);
 #define ioctl(fd, request, arguments)  \
-    (*(((DRV_ELEM*)(&__drv_begin)) + fd)).opt.ioctl((((DRV_ELEM*)(&__drv_begin)) + fd), request, arguments)
+    (*(((DRV_ELEM**)(&__drv_begin)) + fd))->opt.ioctl(*(((DRV_ELEM**)(&__drv_begin)) + fd), request, (unsigned int)arguments)
 
 #define poll(fd, timeout)  \
-    (*(((DRV_ELEM*)(&__drv_begin)) + fd)).opt.poll((((DRV_ELEM*)(&__drv_begin)) + fd), timeout)
+    (*(((DRV_ELEM**)(&__drv_begin)) + fd))->opt.poll(*(((DRV_ELEM**)(&__drv_begin)) + fd), timeout)
         
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 #define container_of(ptr, type, member) (type *)(((size_t)ptr) - offsetof(type, member))

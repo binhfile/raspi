@@ -68,24 +68,19 @@ struct DRV_EXT_INTR g_drv_ext_intr_4 = {
 DRV_REGISTER(g_drv_ext_intr_4);
 #endif
 int drv_ext_intr_init(){
-    memset(&g_drv_ext_intr_0, 0, sizeof(g_drv_ext_intr_0));
+    g_drv_ext_intr_0.drv.name = g_drv_ext_intr_name[0];
     #if (DRV_USE_EXT_INTR_1 == 1)
-    memset(&g_drv_ext_intr_1, 0, sizeof(g_drv_ext_intr_1));
     g_drv_ext_intr_1.drv.name = g_drv_ext_intr_name[1];
     #endif
     #if (DRV_USE_EXT_INTR_4 == 1)
-    memset(&g_drv_ext_intr_2, 0, sizeof(g_drv_ext_intr_2));
     g_drv_ext_intr_2.drv.name = g_drv_ext_intr_name[2];
     #endif
     #if (DRV_USE_EXT_INTR_4 == 1)
-    memset(&g_drv_ext_intr_3, 0, sizeof(g_drv_ext_intr_3));
     g_drv_ext_intr_3.drv.name = g_drv_ext_intr_name[3];
     #endif
     #if (DRV_USE_EXT_INTR_4 == 1)
-    memset(&g_drv_ext_intr_4, 0, sizeof(g_drv_ext_intr_4));
     g_drv_ext_intr_4.drv.name = g_drv_ext_intr_name[4];
     #endif
-    g_drv_ext_intr_0.drv.name = g_drv_ext_intr_name[0];
     return 0;
 }
 int drv_ext_intr_open(void *drv, int flags){

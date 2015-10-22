@@ -1,15 +1,5 @@
 #include "drv_common.h"
 #include "../../../frw_string.h"
-typedef struct {
-    UINT32      frc;
-    UINT32      primary;
-    UINT32      secondary;
-    UINT32      low_power;
-}DRV_COMMON_OSC;
-struct DRV_COMMON{
-    DRV_ELEM    drv;
-    DRV_COMMON_OSC  osc;
-};
 
 int drv_common_open(void *drv, int flags){
     return -1;
@@ -45,8 +35,8 @@ struct DRV_COMMON     g_drv_common = {
     .drv.opt.ioctl    = drv_common_ioctl,
 };
 int drv_common_init(){
-    memset(&g_drv_common, 0, sizeof(g_drv_common));
     g_drv_common.drv.name = g_drv_common_name;
+
     return 0;
 }
 DRV_REGISTER(g_drv_common);

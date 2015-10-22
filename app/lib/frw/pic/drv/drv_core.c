@@ -3,15 +3,15 @@
 #include "../frw_string.h"
 #include "chip/pic24fj/drv_common.h"
 int      errno = 0;
-extern DRV_ELEM __drv_end;
+extern DRV_ELEM *__drv_end;
 
 DRV_ELEM* drv_findDrvByName(const char* pathname){
     DRV_ELEM* ret = 0;
-    DRV_ELEM *elem;
+    DRV_ELEM **elem;
     elem = &__drv_begin;
     while(elem < &__drv_end){
-        if(strcmp((*elem).name, pathname) == 0){
-            ret = elem;
+        if(strcmp((*elem)->name, pathname) == 0){
+            ret = *elem;
             break;
         }
         elem++;
@@ -20,11 +20,11 @@ DRV_ELEM* drv_findDrvByName(const char* pathname){
 }
 int drv_findFdByName(const char* pathname){
     int ret = -1;
-    DRV_ELEM *elem;
+    DRV_ELEM **elem;
     int i = 0;
     elem = &__drv_begin;
     while(elem < &__drv_end){
-        if(strcmp((*elem).name, pathname) == 0){
+        if(strcmp((*elem)->name, pathname) == 0){
             ret = i;
             break;
         }
@@ -35,12 +35,12 @@ int drv_findFdByName(const char* pathname){
 }
 int drv_findFdByDrv(DRV_ELEM* drv){
     int ret = -1;
-    DRV_ELEM *elem;
+    DRV_ELEM **elem;
     int i = 0;
     elem = &__drv_begin;
     
     while(elem < &__drv_end){
-        if(elem == drv){
+        if(*elem == drv){
             ret = i;
             break;
         }
@@ -50,12 +50,12 @@ int drv_findFdByDrv(DRV_ELEM* drv){
     return ret;
 }
 DRV_ELEM* drv_findDrvByFd(int fd){
-    DRV_ELEM *elem;
+    DRV_ELEM **elem;
     elem = &__drv_begin;
     
     while(fd >= 0 && elem < &__drv_end){
         if(fd == 0){
-            return elem;
+            return *elem;
         }
         fd --;
         elem ++;
@@ -63,10 +63,10 @@ DRV_ELEM* drv_findDrvByFd(int fd){
     return 0;
 }
 int drv_initialize(){
-    DRV_ELEM *elem;
+    DRV_ELEM **elem;
     elem = &__drv_begin;
     while(elem < &__drv_end){
-        (*elem).opt.init();
+        (*elem)->opt.init();
         elem++;
     }
     return 0;

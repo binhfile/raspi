@@ -20,7 +20,6 @@ struct DRV_GPIO g_drv_gpio = {
 };
 DRV_REGISTER(g_drv_gpio);
 int drv_gpio_init(){
-    memset(&g_drv_gpio, 0, sizeof(g_drv_gpio));
     g_drv_gpio.drv.name = g_drv_gpio_name;
     return 0;
 }
@@ -30,12 +29,12 @@ int drv_gpio_open(void *drv, int flags){
 int drv_gpio_close(void *drv){
     return 0;
 }
-int drv_gpio_enable_pin(struct DRV_GPIO* drv, DRV_GPIO_ENABLE* arg){
+int drv_gpio_enable_pin(struct DRV_GPIO* drv, struct DRV_GPIO_ENABLE* arg){
     int ret = -1;
     unsigned int port, pin;
     unsigned int base_reg;
     port = arg->pin >> 4;
-    pin  = arg->pin % 4;
+    pin  = arg->pin % 16;
     base_reg = GPIO_REG_BASE_ADDR + (GPIO_REG_MODULE_LEN * port);
     REG(base_reg + GPIO_REG_TRIS) = 
             (REG(base_reg + GPIO_REG_TRIS) & 
@@ -54,34 +53,33 @@ int drv_gpio_enable_pin(struct DRV_GPIO* drv, DRV_GPIO_ENABLE* arg){
     ret = 0;
     return ret;    
 }
-int drv_gpio_write_pin(struct DRV_GPIO* drv, DRV_GPIO_WRITE* arg){
+int drv_gpio_write_pin(struct DRV_GPIO* drv, struct DRV_GPIO_WRITE* arg){
     unsigned int port, pin;
     unsigned int base_reg;
     port = arg->pin >> 4;
-    pin  = arg->pin % 4;
+    pin  = arg->pin % 16;
     base_reg = GPIO_REG_BASE_ADDR + (GPIO_REG_MODULE_LEN * port);
     REG(base_reg + GPIO_REG_LAT) = 
             (REG(base_reg + GPIO_REG_LAT) & 
             (~((unsigned int)(0x01) << pin))) |
             ((unsigned int)(arg->value) << pin);
-    return pin;   
+    return 0;   
 }
-int drv_gpio_read_pin(struct DRV_GPIO* drv, DRV_GPIO_READ* arg){
+int drv_gpio_read_pin(struct DRV_GPIO* drv, struct DRV_GPIO_READ* arg){
     unsigned int port, pin;
     unsigned int base_reg;
-    int ret;
     port = arg->pin >> 4;
-    pin  = arg->pin % 4;
+    pin  = arg->pin % 16;
     base_reg = GPIO_REG_BASE_ADDR + (GPIO_REG_MODULE_LEN * port);
-    ret = (REG(base_reg + GPIO_REG_PORT) >> pin) & (unsigned int)(0x01);
-    return ret;
+    arg->value = (REG(base_reg + GPIO_REG_PORT) >> pin) & (unsigned int)(0x01);
+    return 0;
 }
-int drv_gpio_set_icn(struct DRV_GPIO* drv, DRV_GPIO_INPUT_CHANGE_NOTIFICATION* arg){
+int drv_gpio_set_icn(struct DRV_GPIO* drv, struct DRV_GPIO_INPUT_CHANGE_NOTIFICATION* arg){
     int ret = -1;
     unsigned int reg_index, offset;
     unsigned int reg;
     reg_index = arg->cn_pin >> 4;
-    offset  = arg->cn_pin % 4;
+    offset  = arg->cn_pin % 16;
     // enable
     reg = ICN_REG_BASE_ADDR + ICN_REG_CNEN + (reg_index << 1);
     REG(reg) = (REG(reg) & 
@@ -104,16 +102,16 @@ int drv_gpio_ioctl(void *drv, int request, unsigned int arguments){
     
     switch(request){
         case DRV_GPIO_IOCTL_WRITE:
-            ret = drv_gpio_write_pin(drv, (DRV_GPIO_WRITE*)arguments);
+            ret = drv_gpio_write_pin(drv, (struct DRV_GPIO_WRITE*)arguments);
             break;
         case DRV_GPIO_IOCTL_READ:
-            ret = drv_gpio_read_pin(drv, (DRV_GPIO_READ*)arguments);
+            ret = drv_gpio_read_pin(drv, (struct DRV_GPIO_READ*)arguments);
             break;
         case DRV_GPIO_IOCTL_ENABLE:
-            ret = drv_gpio_enable_pin(drv, (DRV_GPIO_ENABLE*)arguments);
+            ret = drv_gpio_enable_pin(drv, (struct DRV_GPIO_ENABLE*)arguments);
             break;
         case DRV_GPIO_IOCTL_SET_ICN:
-            ret = drv_gpio_set_icn(drv, (DRV_GPIO_INPUT_CHANGE_NOTIFICATION*)arguments);
+            ret = drv_gpio_set_icn(drv, (struct DRV_GPIO_INPUT_CHANGE_NOTIFICATION*)arguments);
             break;
     }
     return ret;

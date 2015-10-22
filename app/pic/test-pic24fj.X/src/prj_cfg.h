@@ -14,6 +14,7 @@ extern "C" {
 #include <frw_string.h>   
     
     extern int g_fd_uart0;
+    extern int g_fd_gpio;
     
     void App_Initialize();
     void App_Delay(int delay);
