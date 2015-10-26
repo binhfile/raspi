@@ -53,6 +53,7 @@ static  void  *AppStartTask (void *p_arg)
     
     gpio_write.pin = LED_STATUS;
     gpio_write.value = 0;
+
     while(1){
         LREP(".");
         gpio_write.value = !gpio_write.value;
@@ -71,7 +72,7 @@ static  void  *AppStartTask2 (void *p_arg)
 		}
 	}
     while(1){
-    	ret = poll(g_fd_ext_intr_1, OS_TICKS_PER_SEC);
+    	ret = poll(g_fd_ext_intr_1, OS_TICKS_PER_SEC*5);
     	if(ret == OS_ERR_NONE) LREP("+");
     	else if(ret == OS_ERR_TIMEOUT) LREP("-");
     	else{
@@ -80,6 +81,7 @@ static  void  *AppStartTask2 (void *p_arg)
     			sleep(1);
     		}
     	}
+    	sleep(1);
     }
     return 0;
 }

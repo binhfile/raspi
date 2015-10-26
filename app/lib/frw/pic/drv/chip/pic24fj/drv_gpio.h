@@ -11,6 +11,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+#include "../../drv_api.h"
 /*port =  A, B, C, D, E, F, G*/
 enum DRV_GPIO_PIN{
     // PORT A
@@ -169,6 +170,12 @@ struct DRV_GPIO_INPUT_CHANGE_NOTIFICATION{
     unsigned int pull_up;   // 0-disable
     unsigned int pull_down; // 0-disable
 };
+
+struct DRV_GPIO{
+    DRV_ELEM drv;
+};
+int drv_gpio_enable_pin(struct DRV_GPIO* drv, struct DRV_GPIO_ENABLE* arg);
+
 #ifdef	__cplusplus
 }
 #endif

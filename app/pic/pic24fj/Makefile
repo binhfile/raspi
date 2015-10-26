@@ -8,7 +8,7 @@ CROSS_COMPILE_ROOT=/opt/microchip/xc16/v1.25
 DEFINEDS=
 
 LDFLAGS=-mcpu=$(CHIP) -omf=elf -Wl,,--defsym=__MPLAB_BUILD=1,,--script=src/pic24fj.gld,--stack=16,--check-sections,--data-init,--pack-data,--handles,--isr,--no-gc-sections,--fill-upper=0,--stackguard=16,--no-force-link,--smart-io,-Map="production.map",--report-mem,--memorysummary,memoryfile.xml
-CFLAGS=-mcpu=$(CHIP) -MMD -g -omf=elf -mlarge-code -mlarge-data -mlarge-scalar -O2 -msmart-io=1 -Wall -msfr-warn=off
+CFLAGS=-mcpu=$(CHIP) -MMD -g -omf=elf -mlarge-code -mlarge-data -mlarge-scalar -O1 -msmart-io=1 -Wall -msfr-warn=off
 CC=$(CROSS_COMPILE_ROOT)/bin/$(CROSS_COMPILE)gcc
 BIN2HEX=$(CROSS_COMPILE_ROOT)/bin/$(CROSS_COMPILE)bin2hex
 STRIP=$(CROSS_COMPILE_ROOT)/bin/$(CROSS_COMPILE)strip

@@ -8,7 +8,7 @@
 #include <drv/chip/pic24fj/drv_utils.h>
 #include <lib_debug.h>
 
-#define EXT_INTR_PIN		DRV_PIN_RP(5)
+#define EXT_INTR_PIN		DRV_PIN_RP(21)
 #define UART_TX_PIN			DRV_PIN_RP(6)
 #define UART_RX_PIN			DRV_PIN_RP(7)
 
@@ -76,12 +76,19 @@ void App_Initialize(){
         }
         gpio_write.pin = LED_STATUS;
         fd = ioctl(g_fd_gpio, DRV_GPIO_IOCTL_WRITE, &gpio_write);
+
+//       gpio_enable.pin = DRV_GPIO_RB8;
+//	   gpio_enable.dir = DRV_GPIO_INPUT;
+//	   fd = ioctl(g_fd_gpio, DRV_GPIO_IOCTL_ENABLE, &gpio_enable);
+//	   if(fd != 0){
+//		   LREP("enable gpio %d failed\r\n", DRV_GPIO_RB8);
+//	   }
     }
     // External interrupt
     g_fd_ext_intr_1 = open("ext_intr_1", 0);
     if(g_fd_ext_intr_1 < 0) LREP("open external interrupt failed\r\n");
     else{
-    	ext_intr_cfg.intr_type = DRV_EXT_INTR_FALLING;
+    	ext_intr_cfg.intr_type = DRV_EXT_INTR_RISING;
     	ext_intr_cfg.prio      = 2;
     	fd = ioctl(g_fd_ext_intr_1, DRV_EXT_INTR_IOCTL_CFG, &ext_intr_cfg);
     	if(fd != 0) LREP("config external interrupt failed\r\n");

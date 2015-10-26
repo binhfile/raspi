@@ -108,15 +108,15 @@ extern "C" {
     };
 #define DRV_PERI_INPUT_MAP(peri_sel, pin_sel) { \
         REG((RPIN_REG_BASE_ADDRESS + (((unsigned int)peri_sel >> 1) <<  1))) = \
-            (REG((RPIN_REG_BASE_ADDRESS + (((unsigned int)peri_sel >> 1) <<  1))) & \
-            (((unsigned int)0x3F << ((peri_sel & 0x01) ? 8 : 0)))) | \
-            ((unsigned int)pin_sel << ((peri_sel & 0x01) ? 8 : 0)); \
+		((REG((RPIN_REG_BASE_ADDRESS + (((unsigned int)peri_sel >> 1) <<  1))) &\
+				(~((unsigned int)0x3F << ((peri_sel & 0x01) ? 8 : 0)))) | \
+				((unsigned int)pin_sel << ((peri_sel & 0x01) ? 8 : 0))); \
     }
 #define DRV_PERI_OUTPUT_MAP(peri_sel, pin_sel){\
         REG((RPO_REG_BASE_ADDRESS + (((unsigned int)pin_sel >> 1) << 1))) = \
-            (REG((RPO_REG_BASE_ADDRESS + (((unsigned int)pin_sel >> 1) << 1))) & \
-            (((unsigned int)0x3F << ((pin_sel & 0x01) ? 8 : 0)))) | \
-            ((unsigned int)peri_sel << ((pin_sel & 0x01) ? 8 : 0)); \
+            ((REG((RPO_REG_BASE_ADDRESS + (((unsigned int)pin_sel >> 1) << 1))) & \
+            (~((unsigned int)0x3F << ((pin_sel & 0x01) ? 8 : 0)))) | \
+            ((unsigned int)peri_sel << ((pin_sel & 0x01) ? 8 : 0))); \
     }
 #ifdef	__cplusplus
 }

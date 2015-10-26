@@ -2,6 +2,7 @@
 #include "drv_regs.h"
 #include "drv_perimap.h"
 #include "drv_utils.h"
+#include "drv_gpio.h"
 #include "../../drv_api.h"
 #include "../../../frw_string.h"
 #include <xc.h>
@@ -104,9 +105,10 @@ int drv_ext_intr_open(void *drv, int flags){
     int ret = -1;
     struct DRV_EXT_INTR *_drv;
     INT8U err;
+
     _drv = container_of(drv, struct DRV_EXT_INTR, drv);
     if(((unsigned char)0x01 << _drv->index) & DRV_EXT_INTR_MODULE_ENABLE){
-    	_drv->event = OSMutexCreate((INT8U)1, &err);
+    	_drv->event = OSSemCreate(0);
 //        LREP("open drv = %x event = %x\r\n", drv, _drv->event);
     	switch( _drv->index){
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x01)
@@ -257,6 +259,7 @@ int drv_ext_intr_ioctl(void *drv, int request, unsigned int arguments){
     }
     return ret;
 }
+volatile int cnt = 0;
 int drv_ext_intr_poll(void *drv, int timeout){
     int ret = -1;
     INT8U err = 0;
@@ -265,8 +268,9 @@ int drv_ext_intr_poll(void *drv, int timeout){
     _drv = container_of(drv, struct DRV_EXT_INTR, drv);
 //    LREP("poll drv=%x index=%d\r\n", drv, _drv->index);
     if(((unsigned char)0x01 << _drv->index) & DRV_EXT_INTR_MODULE_ENABLE){
-    	OSMutexPend(_drv->event, timeout, &err);
+    	OSSemPend(_drv->event, timeout, &err);
     	ret = err;
+//    	LREP("ret=%d\r\n", cnt);
     }
     return ret;
 }
@@ -278,10 +282,15 @@ void __attribute__ ((interrupt, no_auto_psv)) _INT0Interrupt(void){
 }
 #endif
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x02)
-void __attribute__ ((interrupt, no_auto_psv)) _INT1Interrupt(void){
+void __attribute__((__interrupt__,auto_psv)) _INT1Interrupt(){
+	OS_SEM_DATA sem_data;
     IFS1bits.INT1IF = 0;
-    if(g_drv_ext_intr_1.event)
-    	OSMutexPost(g_drv_ext_intr_1.event);
+    if(g_drv_ext_intr_1.event){
+    	OSSemQuery(g_drv_ext_intr_1.event, &sem_data);
+    	if(sem_data.OSCnt == 0)
+    		OSSemPost(g_drv_ext_intr_1.event);
+    }
+//    cnt++;
 }
 #endif
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x04)

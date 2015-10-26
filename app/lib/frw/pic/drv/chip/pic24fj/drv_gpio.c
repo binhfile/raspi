@@ -3,9 +3,7 @@
 #include "drv_regs.h"
 #include "../../../frw_string.h"
 #include <xc.h>
-struct DRV_GPIO{
-    DRV_ELEM drv;
-};
+
 int drv_gpio_init();
 int drv_gpio_open(void *drv, int flags);
 int drv_gpio_close(void *drv);
