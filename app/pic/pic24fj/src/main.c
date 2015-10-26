@@ -24,18 +24,15 @@ OS_STK  AppStartTaskStk2[128];
 
 pthread_t thread_1, thread_2;
 pthread_attr_t attr_thread_1, attr_thread_2;
-sem_t sem_thread;
 static  void  *AppStartTask (void *p_arg);
 static  void  *AppStartTask2 (void *p_arg);
-int main(void) {       
-    App_Initialize();
-    LREP("Initialize done\r\n");
-    
+int main(void) {
     BSP_Init();
     OSInit();
-    
-    sem_init(&sem_thread, 0, 0);
-    
+
+    App_Initialize();
+    LREP("Initialize done\r\n");
+
     pthread_attr_setstackaddr(&attr_thread_1, AppStartTaskStk);
     pthread_attr_setstacksize(&attr_thread_1, 128);
     pthread_setschedprio(thread_1, APP_TASK_START_PRIO);
@@ -53,31 +50,36 @@ int main(void) {
 static  void  *AppStartTask (void *p_arg)
 {
     struct DRV_GPIO_WRITE  gpio_write; 
-    struct DRV_GPIO_READ   gpio_read;
     
-    gpio_write.pin = DRV_GPIO_RE5;    
-    gpio_read.pin  = DRV_GPIO_RE7;
-    
+    gpio_write.pin = LED_STATUS;
+    gpio_write.value = 0;
     while(1){
         LREP(".");
-//        ioctl(g_fd_gpio, DRV_GPIO_IOCTL_READ, &gpio_read);
-//        gpio_write.value = gpio_read.value;
-//        ioctl(g_fd_gpio, DRV_GPIO_IOCTL_WRITE, &gpio_write);
-        sem_wait(&sem_thread);
+        gpio_write.value = !gpio_write.value;
+        ioctl(g_fd_gpio, DRV_GPIO_IOCTL_WRITE, &gpio_write);
+        msleep(500);
     }
     return 0;
 }
 static  void  *AppStartTask2 (void *p_arg)
 {
-    struct DRV_GPIO_WRITE  gpio_write;    
-//    int cnt = 0;
-
-    gpio_write.pin = DRV_GPIO_RE6;
-    gpio_write.value = DRV_GPIO_LOW;
-    ioctl(g_fd_gpio, DRV_GPIO_IOCTL_WRITE, &gpio_write);
+	int ret;
+	if(g_fd_ext_intr_1 <= 0){
+		LREP("external interrupt setup failed, exit task\r\n");
+		while(1){
+			sleep(1);
+		}
+	}
     while(1){
-        sleep(1);
-        sem_post(&sem_thread);
+    	ret = poll(g_fd_ext_intr_1, OS_TICKS_PER_SEC);
+    	if(ret == OS_ERR_NONE) LREP("+");
+    	else if(ret == OS_ERR_TIMEOUT) LREP("-");
+    	else{
+    		LREP("error %d", ret);
+    		while(1){
+    			sleep(1);
+    		}
+    	}
     }
     return 0;
 }

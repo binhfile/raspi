@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+#define DRV_EXT_INTR_MODULE_ENABLE		0b00000010
+
 #define DRV_EXT_INTR_IOCTL_MAP_PIN      0x01    // Map external interrupt pin, arg = &DRV_EXT_INTR_MAP_PIN
 #define DRV_EXT_INTR_IOCTL_CFG          0x02    // arg = &DRV_EXT_INTR_CFG
 
@@ -25,12 +27,13 @@ enum DRV_EXT_INTR_TYPE{
     DRV_EXT_INTR_RISING,
     DRV_EXT_INTR_BOTH
 };
-typedef struct{
+struct DRV_EXT_INTR_MAP_PIN{
     unsigned int rpin;      // RPINx pin
-}DRV_EXT_INTR_MAP_PIN;
-typedef struct{
+};
+struct DRV_EXT_INTR_CFG{
     unsigned int intr_type;
-}DRV_EXT_INTR_CFG;
+    unsigned int prio;
+};
 #ifdef	__cplusplus
 }
 #endif
