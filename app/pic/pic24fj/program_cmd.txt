@@ -1,0 +1,4 @@
+device pic24fj128ga106
+hwtool pickit3 -p
+program pic24fj.hex
+q

@@ -18,6 +18,9 @@
       </logicalFolder>
       <logicalFolder name="f2" displayName="frw" projectFiles="true">
         <itemPath>../../lib/frw/pic/frw_string.h</itemPath>
+        <itemPath>../../lib/frw/pic/ucos/include/pthread.h</itemPath>
+        <itemPath>../../lib/frw/pic/ucos/include/unistd.h</itemPath>
+        <itemPath>../../lib/frw/pic/ucos/include/semaphore.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="lib" projectFiles="true">
         <itemPath>../../lib/include/lib_debug.h</itemPath>
@@ -53,6 +56,9 @@
       </logicalFolder>
       <logicalFolder name="f2" displayName="frw" projectFiles="true">
         <itemPath>../../lib/frw/pic/frw_string.c</itemPath>
+        <itemPath>../../lib/frw/pic/ucos/src/pthread.c</itemPath>
+        <itemPath>../../lib/frw/pic/ucos/src/unistd.c</itemPath>
+        <itemPath>../../lib/frw/pic/ucos/src/semaphore.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="lib" projectFiles="true">
         <itemPath>../../lib/src/lib_debug.c</itemPath>
@@ -147,7 +153,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="extra-include-directories"
-                  value="src;../../lib/frw/pic;../../lib/include;../../third-party/Micrium/Software/CustomBoard;../../third-party/Micrium/Software/uCOS-II/Source;../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16;../../third-party/Micrium/Software/uC-LIB;../../third-party/Micrium/Software/uC-CPU;../../third-party/Micrium/Software/uC-CPU/Microchip/XC16;../../third-party/Micrium/Software/uC-LIB/Cfg/Template;../../third-party/Micrium/Software/uCOS-II/Cfg/Template;../../third-party/Micrium/Software/uC-CPU/Cfg/Template"/>
+                  value="src;../../lib/frw/pic;../../lib/include;../../third-party/Micrium/Software/CustomBoard;../../third-party/Micrium/Software/uCOS-II/Source;../../third-party/Micrium/Software/uCOS-II/Ports/Microchip/XC16;../../third-party/Micrium/Software/uC-LIB;../../third-party/Micrium/Software/uC-CPU;../../third-party/Micrium/Software/uC-CPU/Microchip/XC16;../../third-party/Micrium/Software/uC-LIB/Cfg/Template;../../third-party/Micrium/Software/uCOS-II/Cfg/Template;../../third-party/Micrium/Software/uC-CPU/Cfg/Template;../../lib/frw/pic/ucos/include"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
