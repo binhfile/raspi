@@ -61,12 +61,6 @@ int drv_uart_open(void *drv, int flags){
                          *         |_________________ UTXISEL0  1 Interrupt when a character is transfered to TSR
                          * 
                          */
-    /* BRG = Fcy / 16 / Baudrate - 1, Fcy = FOSC / 2 (FRC)
-     */
-//    REG(base_reg + UART_REG_BRG)  = 25;// Default 9600@8Mhz 
-    // Map pin
-//    RPINR18bits.U1RXR   = 6;    // RP6
-//    RPOR3bits.RP7R      = 3;    // RP7
     IEC0bits.U1RXIE = 0;
     IEC0bits.U1TXIE = 0;
     IEC4bits.U1ERIE = 0;
@@ -119,7 +113,6 @@ ssize_t drv_uart_write(void *drv, const void* buf, size_t count){
     if(_drv->index < 0 || _drv->index > UART_MODULE_COUNT)
         return ret;
     base_reg = UART_REG_BASE_ADDR + (UART_REG_MODULE_LEN * _drv->index);
-    
     for(i = 0; i < count; i++){
         while((REG(base_reg + UART_REG_STA) & ((unsigned int)0x01 << 8)) == 0){
             Nop();
@@ -229,4 +222,13 @@ DRV_REGISTER(g_uart_1);
 DRV_REGISTER(g_uart_2);
 DRV_REGISTER(g_uart_3);
 #endif
+//void __attribute__ ((interrupt, no_auto_psv)) _U1RXInterrupt(void){
+//    IFS0bits.U1RXIF = 0;
+//}
+//void __attribute__ ((interrupt, no_auto_psv)) _U1TXInterrupt(void){
+//    IFS0bits.U1TXIF = 0;
+//}
+//void __attribute__ ((interrupt, no_auto_psv)) _U1ErrInterrupt(void){
+//    IFS4bits.U1ERIF = 0;
+//}
 // end of file
