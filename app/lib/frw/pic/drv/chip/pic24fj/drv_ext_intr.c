@@ -10,7 +10,6 @@
 struct DRV_EXT_INTR{
     DRV_ELEM drv;
     int index;
-    OS_EVENT	*event;
 };
 int drv_ext_intr_init();
 int drv_ext_intr_open(void *drv, int flags);
@@ -18,6 +17,7 @@ int drv_ext_intr_close(void *drv);
 int drv_ext_intr_ioctl(void *drv, int request, unsigned int arguments);
 int drv_ext_intr_poll(void *drv, int timeout);
 
+OS_FLAG_GRP		*g_drv_ext_intr_flag = 0;
 const char      *g_drv_ext_intr_name[] = {
     "ext_intr_0",
     "ext_intr_1",
@@ -82,6 +82,7 @@ struct DRV_EXT_INTR g_drv_ext_intr_4 = {
 DRV_REGISTER(g_drv_ext_intr_4);
 #endif
 int drv_ext_intr_init(){
+	INT8U err;
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x01)
     g_drv_ext_intr_0.drv.name = g_drv_ext_intr_name[0];
 #endif
@@ -97,6 +98,8 @@ int drv_ext_intr_init(){
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x10)
     g_drv_ext_intr_4.drv.name = g_drv_ext_intr_name[4];
 #endif
+
+    g_drv_ext_intr_flag = OSFlagCreate(0, &err);
     return 0;
 }
 #include <lib_debug.h>
@@ -104,12 +107,9 @@ int drv_ext_intr_init(){
 int drv_ext_intr_open(void *drv, int flags){
     int ret = -1;
     struct DRV_EXT_INTR *_drv;
-    INT8U err;
 
     _drv = container_of(drv, struct DRV_EXT_INTR, drv);
     if(((unsigned char)0x01 << _drv->index) & DRV_EXT_INTR_MODULE_ENABLE){
-    	_drv->event = OSSemCreate(0);
-//        LREP("open drv = %x event = %x\r\n", drv, _drv->event);
     	switch( _drv->index){
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x01)
     	case 0:
@@ -159,7 +159,6 @@ int drv_ext_intr_close(void *drv){
     OS_ENTER_CRITICAL();
     _drv = container_of(drv, struct DRV_EXT_INTR, drv);
     if(((unsigned char)0x01 << _drv->index) & DRV_EXT_INTR_MODULE_ENABLE){
-    	_drv->event = (0);
     	switch( _drv->index){
     	case 0:
         	IEC0bits.INT0IE = 0;
@@ -266,11 +265,9 @@ int drv_ext_intr_poll(void *drv, int timeout){
     struct DRV_EXT_INTR *_drv;
 
     _drv = container_of(drv, struct DRV_EXT_INTR, drv);
-//    LREP("poll drv=%x index=%d\r\n", drv, _drv->index);
     if(((unsigned char)0x01 << _drv->index) & DRV_EXT_INTR_MODULE_ENABLE){
-    	OSSemPend(_drv->event, timeout, &err);
+    	OSFlagPend(g_drv_ext_intr_flag, (0x01 << _drv->index), OS_FLAG_WAIT_SET_ALL + OS_FLAG_CONSUME, timeout, &err);
     	ret = err;
-//    	LREP("ret=%d\r\n", cnt);
     }
     return ret;
 }
@@ -283,14 +280,11 @@ void __attribute__ ((interrupt, no_auto_psv)) _INT0Interrupt(void){
 #endif
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x02)
 void __attribute__((__interrupt__,auto_psv)) _INT1Interrupt(){
-	OS_SEM_DATA sem_data;
+	INT8U err;
+	OSIntEnter();
     IFS1bits.INT1IF = 0;
-    if(g_drv_ext_intr_1.event){
-    	OSSemQuery(g_drv_ext_intr_1.event, &sem_data);
-    	if(sem_data.OSCnt == 0)
-    		OSSemPost(g_drv_ext_intr_1.event);
-    }
-//    cnt++;
+    OSFlagPost(g_drv_ext_intr_flag, 0x02, OS_FLAG_SET, &err);
+    OSIntExit();
 }
 #endif
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x04)
