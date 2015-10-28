@@ -881,6 +881,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/drv/internal/drv_internal.h</locationURI>
 		</link>
 		<link>
+			<name>lib/frw/pic/drv/internal/drv_ioctl.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/drv/internal/drv_ioctl.h</locationURI>
+		</link>
+		<link>
 			<name>lib/frw/pic/ucos/include/pthread.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/ucos/include/pthread.h</locationURI>
@@ -1004,6 +1009,16 @@
 			<name>lib/frw/pic/drv/chip/pic24fj/drv_regs.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/drv/chip/pic24fj/drv_regs.h</locationURI>
+		</link>
+		<link>
+			<name>lib/frw/pic/drv/chip/pic24fj/drv_spi.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/drv/chip/pic24fj/drv_spi.c</locationURI>
+		</link>
+		<link>
+			<name>lib/frw/pic/drv/chip/pic24fj/drv_spi.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/drv/chip/pic24fj/drv_spi.h</locationURI>
 		</link>
 		<link>
 			<name>lib/frw/pic/drv/chip/pic24fj/drv_uart.c</name>

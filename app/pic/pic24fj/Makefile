@@ -60,6 +60,7 @@ $(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_uart.o \
 $(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_common.o \
 $(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_gpio.o \
 $(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_ext_intr.o \
+$(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_spi.o \
 $(ROOT)/lib/frw/pic/frw_string.o \
 $(ROOT)/lib/frw/pic/ucos/src/unistd.o \
 $(ROOT)/lib/frw/pic/ucos/src/pthread.o \

@@ -28,4 +28,11 @@
 #define ICN_REG_CNPD            0x00
 #define ICN_REG_CNEN            0x0C
 #define ICN_REG_CNPU            0x18
+/*--- SPI ---*/
+#define SPI_REG_BASE_ADDR       0x0240
+#define SPI_REG_MODULE_LEN      0x0020
+#define SPI_REG_STAT            0x00
+#define SPI_REG_CON1            0x02
+#define SPI_REG_CON2            0x04
+#define SPI_REG_BUF             0x08
 #endif

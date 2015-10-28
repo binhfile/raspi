@@ -6,6 +6,7 @@
 #include <drv/chip/pic24fj/drv_ext_intr.h>
 #include <drv/chip/pic24fj/drv_common.h>
 #include <drv/chip/pic24fj/drv_utils.h>
+#include <drv/chip/pic24fj/drv_spi.h>
 #include <lib_debug.h>
 
 #define EXT_INTR_PIN		DRV_PIN_RP(21)
@@ -15,6 +16,7 @@
 int g_fd_uart0 = -1;
 int g_fd_gpio  = -1;
 int g_fd_ext_intr_1 = -1;
+int g_fd_spi_1 = -1;
 void App_Error(){
     TRISEbits.TRISE6 = 0;
     while(1){
@@ -30,6 +32,9 @@ void App_Initialize(){
     struct DRV_GPIO_WRITE  gpio_write;
     struct DRV_EXT_INTR_MAP_PIN ext_intr_map;
     struct DRV_EXT_INTR_CFG ext_intr_cfg;
+    unsigned int mode, scale;
+    unsigned char bits;
+    unsigned long long speed;
     int fd;
 
     drv_initialize();   // Load all driver is link
@@ -95,6 +100,33 @@ void App_Initialize(){
     	ext_intr_map.rpin 	   = EXT_INTR_PIN;// Map to RPI5
     	fd = ioctl(g_fd_ext_intr_1, DRV_EXT_INTR_IOCTL_MAP_PIN, &ext_intr_map);
     	if(fd != 0) LREP("map external interrupt failed\r\n");
+    }
+    // spi
+    g_fd_spi_1 = open("spi1", 0);
+    if(g_fd_spi_1 < 0) LREP("open spi device\r\n");
+    else{
+    	mode = 0;
+    	bits = 8;
+    	speed = 100000L;
+    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_MODE, &mode);
+    	if (fd == -1)
+    		LREP("can't set spi mode\r\n");
+    	/*
+    	 * bits per word
+    	 */
+//    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_BITS_PER_WORD, &bits);
+//    	if (fd == -1)
+//    		LREP("can't set bits per word\r\n");
+    	/*
+    	 * max speed hz
+    	 */
+//    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_MAX_SPEED_HZ, &speed);
+//    	if (fd == -1)
+//    		LREP("can't set max speed hz\r\n");
+    	scale = 0x0100; // 1:16
+    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_SPEED_SCALE, &scale);
+    	if (fd == -1)
+    		LREP("can't set max speed hz\r\n");
     }
 }
 void frw_debugPrint(const void* sz){
