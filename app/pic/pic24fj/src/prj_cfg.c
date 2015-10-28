@@ -112,9 +112,9 @@ void App_Initialize(){
     	bits = 8;
     	speed = 2000000L;
     	spi_map.sck = DRV_PIN_RP(14);
-    	spi_map.sdi = DRV_PIN_RP(19);
-    	spi_map.sdo = DRV_PIN_RP(10);
-    	spi_map.ss  = DRV_PIN_RP(17);
+    	spi_map.sdi = DRV_PIN_RP(10);
+    	spi_map.sdo = DRV_PIN_RP(17);
+    	spi_map.ss  = DRV_PIN_RP(29);
 
     	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_MODE, &mode);
     	if (fd == -1)

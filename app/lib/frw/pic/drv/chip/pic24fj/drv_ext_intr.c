@@ -98,8 +98,8 @@ int drv_ext_intr_init(){
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x10)
     g_drv_ext_intr_4.drv.name = g_drv_ext_intr_name[4];
 #endif
-
-    g_drv_ext_intr_flag = OSFlagCreate(0, &err);
+    if(g_drv_ext_intr_flag == 0)
+    	g_drv_ext_intr_flag = OSFlagCreate(0, &err);
     return 0;
 }
 #include <lib_debug.h>
@@ -281,10 +281,13 @@ void __attribute__ ((interrupt, no_auto_psv)) _INT0Interrupt(void){
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x02)
 void __attribute__((__interrupt__,auto_psv)) _INT1Interrupt(){
 	INT8U err;
-	OSIntEnter();
+#if OS_CRITICAL_METHOD == 3u                               /* Allocate storage for CPU status register */
+    OS_CPU_SR     cpu_sr = 0u;
+#endif
+	OS_ENTER_CRITICAL();
     IFS1bits.INT1IF = 0;
     OSFlagPost(g_drv_ext_intr_flag, 0x02, OS_FLAG_SET, &err);
-    OSIntExit();
+    OS_EXIT_CRITICAL();
 }
 #endif
 #if (DRV_EXT_INTR_MODULE_ENABLE & 0x04)
