@@ -43,7 +43,7 @@ void lib_debugDump(const void* mem, int length, const char* sz, ...){
     {
     	frw_debugPrint(szBuffer);
     }
-    lib_debugPrint("\n");
+    lib_debugPrint("\r\n");
     while (length > 0)
     {
         iLen = (length > 16) ? 16 : length;
@@ -69,7 +69,7 @@ void lib_debugDump(const void* mem, int length, const char* sz, ...){
             else
             	lib_debugPrint(" ");
         }
-        lib_debugPrint("\n");
+        lib_debugPrint("\r\n");
         length -= iLen;
         p += iLen;
     }

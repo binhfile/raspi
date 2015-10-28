@@ -13,56 +13,79 @@
 #include "prj_cfg.h"
 #include <drv/drv_api.h>
 #include <drv/chip/pic24fj/drv_gpio.h>
+#include <drv/chip/pic24fj/drv_spi.h>
 
 #include <pthread.h>
 #include <unistd.h>
 #include <semaphore.h>
 #include <lib_debug.h>
 
-OS_STK  AppStartTaskStk[128];
-OS_STK  AppStartTaskStk2[128];
+OS_STK  		Sys_Initialize_Stack[512];
+pthread_t 		sys_initialize_task;
+pthread_attr_t 	sys_initialize_task_attr;
 
-pthread_t thread_1, thread_2;
-pthread_attr_t attr_thread_1, attr_thread_2;
-static  void  *AppStartTask (void *p_arg);
-static  void  *AppStartTask2 (void *p_arg);
+OS_STK  		App_Task_Stack[256];
+pthread_t 		app_task_task;
+pthread_attr_t 	app_task_task_attr;
+
+static  void  *Sys_Initialize (void *p_arg);
+static  void  *App_Task (void *p_arg);
 int main(void) {
+	unsigned int reset;
+	reset = RCON;
     BSP_Init();
     OSInit();
 
     App_Initialize();
-    LREP("Initialize done\r\n");
+    LREP("Initialize done %04X\r\n", reset);
 
-    pthread_attr_setstackaddr(&attr_thread_1, AppStartTaskStk);
-    pthread_attr_setstacksize(&attr_thread_1, 128);
-    pthread_setschedprio(thread_1, APP_TASK_START_PRIO);
-    
-    pthread_attr_setstackaddr(&attr_thread_2, AppStartTaskStk2);
-    pthread_attr_setstacksize(&attr_thread_2, 128);
-    pthread_setschedprio(thread_2, APP_TASK_START_PRIO+2);
-    
-    pthread_create(&thread_1, &attr_thread_1, AppStartTask, 0);
-    pthread_create(&thread_2, &attr_thread_2, AppStartTask2, 0);
+    pthread_attr_setstackaddr(&sys_initialize_task_attr, Sys_Initialize_Stack);
+    pthread_attr_setstacksize(&sys_initialize_task_attr, 512);
+    pthread_setschedprio(sys_initialize_task, 0);
+    pthread_create(&sys_initialize_task, &sys_initialize_task_attr, Sys_Initialize, 0);
 
     OSStart();
     return 0;
 }
-static  void  *AppStartTask (void *p_arg)
+extern volatile unsigned int g_cnt;
+static  void  *Sys_Initialize (void *p_arg)
 {
     struct DRV_GPIO_WRITE  gpio_write; 
+    struct spi_ioc_transfer spi_xfer;
+    unsigned char tx[32], rx[32];
+    int i, ret=-1;
     
+    pthread_attr_setstackaddr(&app_task_task_attr, App_Task_Stack);
+    pthread_attr_setstacksize(&app_task_task_attr, 256);
+    pthread_setschedprio(app_task_task, 2);
+    pthread_create(&app_task_task, &app_task_task_attr, App_Task, 0);
+
     gpio_write.pin = LED_STATUS;
     gpio_write.value = 0;
+	// test
+	for(i = 0; i < 32; i++){
+		tx[i] = i;
+		rx[i] = 0;
+	}
+	spi_xfer.bits_per_word = 8;
+	spi_xfer.len = 32;
+	spi_xfer.rx_buf = (unsigned int)&rx[0];
+	spi_xfer.tx_buf = (unsigned int)&tx[0];
+	spi_xfer.speed_hz = 1000000L;
+	spi_xfer.timeout = OS_TICKS_PER_SEC;
+	ret = ioctl(g_fd_spi_1, SPI_IOC_MESSAGE, &spi_xfer);
+	LREP("xfer len = %d\r\n", ret);
 
     while(1){
-        LREP(".");
+//        LREP(".");
+    	LREP("%d ", g_cnt);
         gpio_write.value = !gpio_write.value;
         ioctl(g_fd_gpio, DRV_GPIO_IOCTL_WRITE, &gpio_write);
         msleep(500);
     }
     return 0;
 }
-static  void  *AppStartTask2 (void *p_arg)
+static  void  *App_Task (void *p_arg)
 {
 	int ret;
 	if(g_fd_ext_intr_1 <= 0){

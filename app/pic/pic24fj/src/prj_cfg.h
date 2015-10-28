@@ -16,6 +16,7 @@ extern "C" {
     extern int g_fd_uart0;
     extern int g_fd_gpio;
     extern int g_fd_ext_intr_1;
+    extern int g_fd_spi_1;
     
 #define LED_STATUS			DRV_GPIO_RE5
 #define LED_ERROR			DRV_GPIO_RE6

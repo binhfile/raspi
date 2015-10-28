@@ -226,11 +226,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/lib/src/lib_debug.c</locationURI>
 		</link>
 		<link>
-			<name>lib/src/lib_debug.c.o.d</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/lib/src/lib_debug.c.o.d</locationURI>
-		</link>
-		<link>
 			<name>lib/src/lib_gpio.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/lib/src/lib_gpio.c</locationURI>
@@ -534,6 +529,21 @@
 			<name>lib/frw/pic/drv</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>lib/frw/pic/frw_gpio.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/frw_gpio.c</locationURI>
+		</link>
+		<link>
+			<name>lib/frw/pic/frw_gpio_internal.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/frw_gpio_internal.h</locationURI>
+		</link>
+		<link>
+			<name>lib/frw/pic/frw_mem.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/frw_mem.c</locationURI>
 		</link>
 		<link>
 			<name>lib/frw/pic/frw_string.c</name>

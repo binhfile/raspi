@@ -8,6 +8,7 @@
 #include <drv/chip/pic24fj/drv_utils.h>
 #include <drv/chip/pic24fj/drv_spi.h>
 #include <lib_debug.h>
+#include <os_cfg.h>
 
 #define EXT_INTR_PIN		DRV_PIN_RP(21)
 #define UART_TX_PIN			DRV_PIN_RP(6)
@@ -32,9 +33,11 @@ void App_Initialize(){
     struct DRV_GPIO_WRITE  gpio_write;
     struct DRV_EXT_INTR_MAP_PIN ext_intr_map;
     struct DRV_EXT_INTR_CFG ext_intr_cfg;
-    unsigned int mode, scale;
-    unsigned char bits;
+    unsigned int mode;
+    unsigned int bits;
     unsigned long long speed;
+    struct spi_ioc_map_pin spi_map;
+
     int fd;
 
     drv_initialize();   // Load all driver is link
@@ -48,7 +51,7 @@ void App_Initialize(){
     // UART DRV
     g_fd_uart0 = open("uart0", 0);
     if(g_fd_uart0 < 0) App_Error();
-    ioctl(g_fd_uart0, TCGETS2, (unsigned int)&opt);
+    ioctl(g_fd_uart0, TCGETS2, &opt);
     opt.c_ispeed = 115200;
     opt.c_ospeed = 115200;
     opt.c_cflag &= ~CSIZE;
@@ -56,7 +59,7 @@ void App_Initialize(){
     opt.c_cflag &= ~CSTOPB;
     opt.c_cflag &= ~PARENB;
     opt.c_iflag &= ~INPCK;
-    ioctl(g_fd_uart0, TCSETS2, (unsigned int)&opt);
+    ioctl(g_fd_uart0, TCSETS2, &opt);
     map_pin.rx = UART_RX_PIN;
     map_pin.tx = UART_TX_PIN;
     ioctl(g_fd_uart0, UART_IOCTL_MAP_PIN, &map_pin);
@@ -105,28 +108,32 @@ void App_Initialize(){
     g_fd_spi_1 = open("spi1", 0);
     if(g_fd_spi_1 < 0) LREP("open spi device\r\n");
     else{
-    	mode = 0;
+    	mode = SPI_MODE_0;
     	bits = 8;
-    	speed = 100000L;
+    	speed = 2000000L;
+    	spi_map.sck = DRV_PIN_RP(14);
+    	spi_map.sdi = DRV_PIN_RP(19);
+    	spi_map.sdo = DRV_PIN_RP(10);
+    	spi_map.ss  = DRV_PIN_RP(17);
+
     	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_MODE, &mode);
     	if (fd == -1)
     		LREP("can't set spi mode\r\n");
     	/*
     	 * bits per word
     	 */
-//    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_BITS_PER_WORD, &bits);
-//    	if (fd == -1)
-//    		LREP("can't set bits per word\r\n");
+    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_BITS_PER_WORD, &bits);
+    	if (fd == -1)
+    		LREP("can't set bits per word\r\n");
     	/*
     	 * max speed hz
     	 */
-//    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_MAX_SPEED_HZ, &speed);
-//    	if (fd == -1)
-//    		LREP("can't set max speed hz\r\n");
-    	scale = 0x0100; // 1:16
-    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_SPEED_SCALE, &scale);
+    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_MAX_SPEED_HZ, &speed);
     	if (fd == -1)
     		LREP("can't set max speed hz\r\n");
+    	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_MAP_PIN, &spi_map);
+		if (fd == -1)
+			LREP("can't map pin\r\n");
     }
 }
 void frw_debugPrint(const void* sz){
