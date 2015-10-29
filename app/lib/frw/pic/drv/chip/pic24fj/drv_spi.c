@@ -16,8 +16,6 @@ struct DRV_SPI{
     unsigned int xfer_wait_tx_done;
 };
 OS_FLAG_GRP* g_drv_spi_flags = 0;
-#define DRV_SPI_MODULE_COUNT	3
-#define DRV_SPI_MODULE_ENABLE	0b00000001
 int drv_spi_init();
 __prog__ unsigned int g_drv_spi_clock_scale[4][8] __attribute__((space(prog)))= {
 		{64*8, 64*7, 64*6, 64*5, 64*4, 64*3, 64*2, 64*1},
@@ -328,13 +326,6 @@ int drv_spi_init(){
 }
 #if (DRV_SPI_MODULE_ENABLE & 0x01)
 DRV_REGISTER(g_drv_spi_0);
-#endif
-#if (DRV_SPI_MODULE_ENABLE & 0x02)
-DRV_REGISTER(g_drv_spi_1);
-#endif
-#if (DRV_SPI_MODULE_ENABLE & 0x04)
-DRV_REGISTER(g_drv_spi_2);
-#endif
 void __attribute__ ((interrupt, no_auto_psv)) _SPI1Interrupt(void){
 	unsigned char* pu8;
 	INT8U err;
@@ -371,10 +362,86 @@ void __attribute__ ((interrupt, no_auto_psv)) _SPI1Interrupt(void){
 	}
 	OS_EXIT_CRITICAL();
 }
+#endif
+#if (DRV_SPI_MODULE_ENABLE & 0x02)
+DRV_REGISTER(g_drv_spi_1);
 void __attribute__ ((interrupt, no_auto_psv)) _SPI2Interrupt(void){
+	unsigned char* pu8;
+	INT8U err;
+#if OS_CRITICAL_METHOD == 3u                               /* Allocate storage for CPU status register */
+    OS_CPU_SR     cpu_sr = 0u;
+#endif
+	OS_ENTER_CRITICAL();
+
 	IFS2bits.SPI2IF = 0;
+	// rx
+	pu8 = (unsigned char*)g_drv_spi_1.xfer.rx_buf;
+	while(SPI2STATbits.SRXMPT == 0){
+		if(g_drv_spi_1.xfer_rx_cnt < g_drv_spi_1.xfer.len){
+			*(pu8 + g_drv_spi_1.xfer_rx_cnt) = SPI2BUF;
+			g_drv_spi_1.xfer_rx_cnt++;
+		}
+	}
+	// tx
+	if(g_drv_spi_1.xfer_wait_tx_done == 0){
+		pu8 = (unsigned char*)g_drv_spi_1.xfer.tx_buf;
+		while(SPI2STATbits.SPITBF == 0){
+			if(g_drv_spi_1.xfer_tx_cnt < g_drv_spi_1.xfer.len){
+				SPI2BUF = *(pu8 + g_drv_spi_1.xfer_tx_cnt);
+				g_drv_spi_1.xfer_tx_cnt ++;
+			}else{
+				if(g_drv_spi_1.xfer_wait_tx_done == 0){
+					g_drv_spi_1.xfer_wait_tx_done = 1;
+				}
+				break;
+			}
+		}
+	}else{
+		OSFlagPost(g_drv_spi_flags, 0x02, OS_FLAG_SET, &err);
+	}
+	OS_EXIT_CRITICAL();
 }
+#endif
+#if (DRV_SPI_MODULE_ENABLE & 0x04)
+DRV_REGISTER(g_drv_spi_2);
 void __attribute__ ((interrupt, no_auto_psv)) _SPI3Interrupt(void){
+	unsigned char* pu8;
+	INT8U err;
+#if OS_CRITICAL_METHOD == 3u                               /* Allocate storage for CPU status register */
+    OS_CPU_SR     cpu_sr = 0u;
+#endif
+	OS_ENTER_CRITICAL();
+
 	IFS5bits.SPI3IF = 0;
+	// rx
+	pu8 = (unsigned char*)g_drv_spi_2.xfer.rx_buf;
+	while(SPI3STATbits.SRXMPT == 0){
+		if(g_drv_spi_2.xfer_rx_cnt < g_drv_spi_2.xfer.len){
+			*(pu8 + g_drv_spi_2.xfer_rx_cnt) = SPI3BUF;
+			g_drv_spi_2.xfer_rx_cnt++;
+		}
+	}
+	// tx
+	if(g_drv_spi_2.xfer_wait_tx_done == 0){
+		pu8 = (unsigned char*)g_drv_spi_2.xfer.tx_buf;
+		while(SPI3STATbits.SPITBF == 0){
+			if(g_drv_spi_2.xfer_tx_cnt < g_drv_spi_2.xfer.len){
+				SPI3BUF = *(pu8 + g_drv_spi_2.xfer_tx_cnt);
+				g_drv_spi_2.xfer_tx_cnt ++;
+			}else{
+				if(g_drv_spi_2.xfer_wait_tx_done == 0){
+					g_drv_spi_2.xfer_wait_tx_done = 1;
+				}
+				break;
+			}
+		}
+	}else{
+		OSFlagPost(g_drv_spi_flags, 0x04, OS_FLAG_SET, &err);
+	}
+	OS_EXIT_CRITICAL();
 }
+#endif
+
+
+
 // end of file

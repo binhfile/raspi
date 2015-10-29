@@ -76,17 +76,17 @@ static  void  *Sys_Initialize (void *p_arg)
 	spi_xfer.timeout = OS_TICKS_PER_SEC;
 	ret = ioctl(g_fd_spi_1, SPI_IOC_MESSAGE(1), &spi_xfer);
 	LREP("xfer len = %d\r\n", ret);
-	if(ret == TEST_LEN){
-		for(i = 0 ;i < TEST_LEN; i++){
-			if(rx[i] != tx[i]){
-				LREP("mismatch @ %d\r\n", i);
-				break;
-			}
-		}
-		if(i == TEST_LEN){
-			LREP("test PASSED\r\n");
-		}
-	}
+//	if(ret == TEST_LEN){
+//		for(i = 0 ;i < TEST_LEN; i++){
+//			if(rx[i] != tx[i]){
+//				LREP("mismatch @ %d\r\n", i);
+//				break;
+//			}
+//		}
+//		if(i == TEST_LEN){
+//			LREP("test PASSED\r\n");
+//		}
+//	}
 
     while(1){
         LREP(".");
@@ -94,25 +94,25 @@ static  void  *Sys_Initialize (void *p_arg)
     	for(i = 0; i < TEST_LEN; i++){
     		rx[i] = 0;
     	}
-    	spi_xfer.bits_per_word = 8;
-    	spi_xfer.len = TEST_LEN;
-    	spi_xfer.rx_buf = (unsigned int)&rx[0];
-    	spi_xfer.tx_buf = (unsigned int)&tx[0];
-    	spi_xfer.speed_hz = 1000000L;
-    	spi_xfer.timeout = OS_TICKS_PER_SEC;
+//    	spi_xfer.bits_per_word = 8;
+//    	spi_xfer.len = TEST_LEN;
+//    	spi_xfer.rx_buf = (unsigned int)&rx[0];
+//    	spi_xfer.tx_buf = (unsigned int)&tx[0];
+//    	spi_xfer.speed_hz = 1000000L;
+//    	spi_xfer.timeout = OS_TICKS_PER_SEC;
     	ret = ioctl(g_fd_spi_1, SPI_IOC_MESSAGE(1), &spi_xfer);
     	LREP("xfer len = %d\r\n", ret);
-    	if(ret == TEST_LEN){
-    		for(i = 0 ;i < TEST_LEN; i++){
-    			if(rx[i] != tx[i]){
-    				LREP("mismatch @ %d failed=%d\r\n", i, TEST_LEN - i);
-    				break;
-    			}
-    		}
-    		if(i == TEST_LEN){
-    			LREP("test PASSED\r\n");
-    		}
-    	}
+//    	if(ret == TEST_LEN){
+//    		for(i = 0 ;i < TEST_LEN; i++){
+//    			if(rx[i] != tx[i]){
+//    				LREP("mismatch @ %d failed=%d\r\n", i, TEST_LEN - i);
+//    				break;
+//    			}
+//    		}
+//    		if(i == TEST_LEN){
+//    			LREP("test PASSED\r\n");
+//    		}
+//    	}
 
 //    	LREP("%d ", g_cnt);
         gpio_write.value = !gpio_write.value;

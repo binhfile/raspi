@@ -11,8 +11,9 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
+#ifndef DRV_EXT_INTR_MODULE_ENABLE
 #define DRV_EXT_INTR_MODULE_ENABLE		0b00000010
+#endif
 
 #define DRV_EXT_INTR_IOCTL_MAP_PIN      0x01    // Map external interrupt pin, arg = &DRV_EXT_INTR_MAP_PIN
 #define DRV_EXT_INTR_IOCTL_CFG          0x02    // arg = &DRV_EXT_INTR_CFG

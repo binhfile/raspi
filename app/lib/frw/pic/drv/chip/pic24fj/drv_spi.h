@@ -2,6 +2,11 @@
 #define DRV_SPI_H
 #include "../../drv_api.h"
 
+#ifndef DRV_SPI_MODULE_ENABLE
+#define DRV_SPI_MODULE_ENABLE	0b00000111
+#endif
+#define DRV_SPI_MODULE_COUNT	3
+
 #define SPI_CPHA		0x01
 #define SPI_CPOL		0x02
 
@@ -10,16 +15,8 @@
 #define SPI_MODE_2		(SPI_CPOL|0)
 #define SPI_MODE_3		(SPI_CPOL|SPI_CPHA)
 
-#define SPI_CS_HIGH		0x04
-#define SPI_LSB_FIRST	0x08
 #define SPI_3WIRE		0x10
-#define SPI_LOOP		0x20
 #define SPI_NO_CS		0x40
-#define SPI_READY		0x80
-#define SPI_TX_DUAL		0x100
-#define SPI_TX_QUAD		0x200
-#define SPI_RX_DUAL		0x400
-#define SPI_RX_QUAD		0x800
 
 /*---------------------------------------------------------------------------*/
 
