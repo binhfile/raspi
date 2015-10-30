@@ -131,6 +131,11 @@ void App_Initialize(){
     	fd = ioctl(g_fd_spi_1, SPI_IOC_WR_MAP_PIN, &spi_map);
 		if (fd == -1)
 			LREP("can't map pin\r\n");
+		else{
+			DRV_ADC_DISABLE_PIN(DRV_PIN_ADC(9));
+			DRV_ADC_DISABLE_PIN(DRV_PIN_ADC(14));
+			DRV_ADC_DISABLE_PIN(DRV_PIN_ADC(15));
+		}
     }
 }
 void frw_debugPrint(const void* sz){

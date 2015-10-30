@@ -1,6 +1,7 @@
 #include "drv_gpio.h"
-#include "../../drv_api.h"
 #include "drv_regs.h"
+#include "drv_perimap.h"
+#include "../../drv_api.h"
 #include "../../../frw_string.h"
 #include <xc.h>
 
@@ -44,8 +45,7 @@ int drv_gpio_enable_pin(struct DRV_GPIO* drv, struct DRV_GPIO_ENABLE* arg){
             ((unsigned int)(arg->opendrain) << pin);
     // analog port for B0-B15 (1*16+0 + 1*16+15)
     if(port == 1){  // port B
-        REG(ADC_REG_BASE_ADDR + ADC_REG_AD1PCFGL) = 
-                REG(ADC_REG_BASE_ADDR + ADC_REG_AD1PCFGL) | (((unsigned int)1) << pin);
+    	DRV_ADC_DISABLE_PIN(pin);
     }
     Nop();
     ret = 0;

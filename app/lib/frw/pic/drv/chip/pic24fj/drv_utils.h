@@ -21,8 +21,7 @@ extern "C" {
 
 #define DRV_UNLOCK_REG  {OSCCONbits.IOLOCK = 0;}
 #define DRV_LOCK_REG  {OSCCONbits.IOLOCK = 1;}
-    
-#define DRV_PIN_RP(x)   (x)
+
 
 UINT32  drv_getCpuClockFreq (void);
 #ifdef	__cplusplus

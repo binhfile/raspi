@@ -12,6 +12,9 @@
 extern "C" {
 #endif
 #include "drv_regs.h"
+
+#define DRV_PIN_RP(x)   (x)
+#define DRV_PIN_ADC(x)	(x)
     
     enum DRV_PERIMAP_INPUT{
         DRV_PERIMAP_INPUT_UNUSED0 = 0,  // RPINR0
@@ -118,6 +121,14 @@ extern "C" {
             (~((unsigned int)0x3F << ((pin_sel & 0x01) ? 8 : 0)))) | \
             ((unsigned int)peri_sel << ((pin_sel & 0x01) ? 8 : 0))); \
     }
+#define DRV_ADC_DISABLE_PIN(adc_pin) { \
+        REG(ADC_REG_BASE_ADDR + ADC_REG_AD1PCFGL) = \
+                REG(ADC_REG_BASE_ADDR + ADC_REG_AD1PCFGL) | (((unsigned int)1) << adc_pin); \
+		}
+#define DRV_ADC_ENABLE_PIN(adc_pin) { \
+        REG(ADC_REG_BASE_ADDR + ADC_REG_AD1PCFGL) = \
+                REG(ADC_REG_BASE_ADDR + ADC_REG_AD1PCFGL) & (~(((unsigned int)1) << pin)); \
+		}
 #ifdef	__cplusplus
 }
 #endif

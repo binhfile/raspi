@@ -17,6 +17,14 @@ PROGRAM=/opt/microchip/mplabx/v3.10/mplab_ide/bin/mdb.sh
 PROGRAM_CMD=program_cmd.txt
 PREFIX=@
 OBJS=
+
+# MLA
+INCLUDES+=-Isrc/miwi
+INCLUDES+=-I$(ROOT)/third-party/mla/framework
+OBJS+= \
+$(ROOT)/third-party/mla/framework/miwi/src/miwi_nvm.o\
+$(ROOT)/third-party/mla/framework/miwi/src/miwi_p2p.o\
+
 # UCOS port
 INCLUDES+=-I$(ROOT)/third-party/Micrium/Software/CustomBoard
 INCLUDES+=-I$(ROOT)/third-party/Micrium/Software/uCOS-II/Source

@@ -36,6 +36,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>mla</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>Micrium/AppNotes</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -77,6 +82,11 @@
 		</link>
 		<link>
 			<name>lib/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -254,6 +264,16 @@
 			<name>lib/src/lib_time.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/lib/src/lib_time.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>Micrium/AppNotes/AN1xxx-RTOS/AN1016-uCOS-II-dsPIC33</name>
@@ -596,6 +616,61 @@
 			<locationURI>PARENT-2-PROJECT_LOC/lib/include/internal/lib_spi_internal.h</locationURI>
 		</link>
 		<link>
+			<name>mla/framework/driver/eeprom_spi</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/spi</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/miwi_api.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/miwi_api.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/miwi_mesh.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/miwi_mesh.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/miwi_nvm.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/miwi_nvm.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/miwi_p2p.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/miwi_p2p.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/miwi_pro.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/miwi_pro.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>Micrium/AppNotes/AN1xxx-RTOS/AN1016-uCOS-II-dsPIC33/AN-1016.pdf</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/third-party/Micrium/AppNotes/AN1xxx-RTOS/AN1016-uCOS-II-dsPIC33/AN-1016.pdf</locationURI>
@@ -806,6 +881,156 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>mla/framework/driver/eeprom_spi/drv_nvm_eeprom_spi_25aa02e48.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/eeprom_spi/drv_nvm_eeprom_spi_25aa02e48.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/eeprom_spi/drv_nvm_eeprom_spi_25lc256.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/eeprom_spi/drv_nvm_eeprom_spi_25lc256.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/eeprom_spi/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/drv_mrf_miwi.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/drv_mrf_miwi.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/drv_mrf_miwi_24j40.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/drv_mrf_miwi_24j40.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/drv_mrf_miwi_24xa.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/drv_mrf_miwi_24xa.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/drv_mrf_miwi_49xa.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/drv_mrf_miwi_49xa.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/drv_mrf_miwi_89xa.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/drv_mrf_miwi_89xa.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/drv_mrf_miwi_crc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/drv_mrf_miwi_crc.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/drv_mrf_miwi_security.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/drv_mrf_miwi_security.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/drv_nvm_flash_spi_m25p80.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/drv_nvm_flash_spi_m25p80.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/drv_nvm_flash_spi_sst25vf016.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/drv_nvm_flash_spi_sst25vf016.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/drv_nvm_flash_spi_sst25vf064.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/drv_nvm_flash_spi_sst25vf064.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/drv_nvm_nor_flash_pmp_sst39lf400.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/drv_nvm_nor_flash_pmp_sst39lf400.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/nvm_flash_spi_sst26vf0xxb.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/nvm_flash_spi_sst26vf0xxb.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/spi/config</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/spi/drv_spi.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/spi/drv_spi.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/spi/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/config</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/drv_uart1.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/drv_uart1.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/drv_uart2.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/drv_uart2.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/drv_uart3.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/drv_uart3.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/drv_uart4.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/drv_uart4.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/src/miwi_mesh.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/src/miwi_mesh.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/src/miwi_nvm.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/src/miwi_nvm.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/src/miwi_p2p.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/src/miwi_p2p.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/miwi/src/miwi_pro.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/miwi/src/miwi_pro.c</locationURI>
+		</link>
+		<link>
 			<name>Micrium/Software/uC-CPU/BSP/Template/cpu_bsp.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/third-party/Micrium/Software/uC-CPU/BSP/Template/cpu_bsp.c</locationURI>
@@ -909,6 +1134,141 @@
 			<name>lib/frw/pic/ucos/src/unistd.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/lib/frw/pic/ucos/src/unistd.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/eeprom_spi/src/drv_nvm_eeprom_spi_25aa02e48.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/eeprom_spi/src/drv_nvm_eeprom_spi_25aa02e48.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/eeprom_spi/src/drv_nvm_eeprom_spi_25lc256.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/eeprom_spi/src/drv_nvm_eeprom_spi_25lc256.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_24j40.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_24j40.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_24xa.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_24xa.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_24xa_proprietary.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_24xa_proprietary.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_49xa.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_49xa.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_89xa.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_89xa.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_crc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_crc.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_security.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/mrf_miwi/src/drv_mrf_miwi_security.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/src/drv_nvm_flash_spi_m25p80.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/src/drv_nvm_flash_spi_m25p80.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/src/drv_nvm_flash_spi_sst25vf016.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/src/drv_nvm_flash_spi_sst25vf016.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/src/drv_nvm_flash_spi_sst25vf064.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/src/drv_nvm_flash_spi_sst25vf064.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/src/drv_nvm_nor_flash_pmp_sst39lf400.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/src/drv_nvm_nor_flash_pmp_sst39lf400.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/nvm/src/nvm_flash_spi_sst26vf0xxb.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/nvm/src/nvm_flash_spi_sst26vf0xxb.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/spi/config/drv_spi_config_template.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/spi/config/drv_spi_config_template.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/spi/src/drv_spi_16bit.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/spi/src/drv_spi_16bit.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/spi/src/drv_spi_16bit_v2.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/spi/src/drv_spi_16bit_v2.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/spi/src/drv_spi_pic18.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/spi/src/drv_spi_pic18.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/config/drv_uart_config_template.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/config/drv_uart_config_template.h</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src/drv_uart1_16bit.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/src/drv_uart1_16bit.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src/drv_uart1_16bit_poll.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/src/drv_uart1_16bit_poll.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src/drv_uart2_16bit.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/src/drv_uart2_16bit.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src/drv_uart2_16bit_poll.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/src/drv_uart2_16bit_poll.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src/drv_uart3_16bit.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/src/drv_uart3_16bit.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src/drv_uart3_16bit_poll.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/src/drv_uart3_16bit_poll.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src/drv_uart4_16bit.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/src/drv_uart4_16bit.c</locationURI>
+		</link>
+		<link>
+			<name>mla/framework/driver/uart/src/drv_uart4_16bit_poll.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/third-party/mla/framework/driver/uart/src/drv_uart4_16bit_poll.c</locationURI>
 		</link>
 		<link>
 			<name>Micrium/Software/uC-Probe/Target/Communication/Generic/OS</name>
