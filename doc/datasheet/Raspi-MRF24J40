@@ -1,5 +1,6 @@
 /dev/spidev0.0
 #RESET 	<-- GPIO18
+WAKE 	<-- GPIO24
 INT 	--> GPIO23
 
 /dev/spidev0.1

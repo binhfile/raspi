@@ -2,8 +2,10 @@
 #include "drv_regs.h"
 #include "drv_perimap.h"
 #include "drv_utils.h"
+#include "drv_gpio.h"
 #include "../../drv_api.h"
 #include <frw_string.h>
+#include <lib_debug.h>
 #include <xc.h>
 #include <ucos_ii.h>
 
@@ -14,6 +16,8 @@ struct DRV_SPI{
     unsigned int xfer_tx_cnt;
     unsigned int xfer_rx_cnt;
     unsigned int xfer_wait_tx_done;
+    int 		cs_gpio_handle;
+    int			cs_gpio_pin;
 };
 OS_FLAG_GRP* g_drv_spi_flags = 0;
 int drv_spi_init();
@@ -55,20 +59,27 @@ int drv_spi_open(void *drv, int flags){
      *
      */
     REG(base_reg+SPI_REG_CON1) = \
-    		((unsigned int)0x00 << 0) |	/*scale = 64*8 */
-    		((unsigned int)0x01 << 5) |	/*master mode*/
+    		((unsigned int)0x00 << 0) |	/*0-scale = 64*8 */
+    		((unsigned int)0x01 << 5) |	/*1-master mode*/
 			((unsigned int)0x00 << 6) |	/*clock polarity*/
-			((unsigned int)0x01 << 7) |	/*slave select enable*/
+			((unsigned int)0x00 << 7) |	/*1-slave select enable*/
 			((unsigned int)0x00 << 8) |	/*clock edge select*/
-			((unsigned int)0x01 << 9) |	/*data input sample at end of data output time*/
-			((unsigned int)0x00 << 10) |/*8 bits word*/
-			((unsigned int)0x00 << 11) |/*SDO pin is controlled by the module*/
-			((unsigned int)0x00 << 12);/*SPI click internal enable*/
-    REG(base_reg+SPI_REG_CON2) = 0x0001;/*Enhanced buffer enable*/
+			((unsigned int)0x01 << 9) |	/*1-data input sample at end of data output time*/
+			((unsigned int)0x00 << 10) |/*0-8 bits word*/
+			((unsigned int)0x00 << 11) |/*0-SDO pin is controlled by the module*/
+			((unsigned int)0x00 << 12); /*0-SPI clock internal enable*/
+    REG(base_reg+SPI_REG_CON2) = \
+    		((unsigned int)0x01 << 0) |	/*1-Enhanced buffer enable*/
+			((unsigned int)0x00 << 1) |	/*0-Frame sync pulse precedes first bit clock*/
+			((unsigned int)0x00 << 13)|	/*0-Frame sync pulse is active-low*/
+			((unsigned int)0x00 << 14)|	/*0-Frame sync pulse output*/
+			((unsigned int)0x00 << 15);	/*0-Frame SPI suppord is enable*/
     REG(base_reg+SPI_REG_STAT) = \
     		((unsigned int)0x05 << 2) |	/*interrupt type*/
 			((unsigned int)0x01 << 15);	/*Enable module*/
     ret = 0;
+    LREP("CON1=%04X %04X\r\n", SPI1CON1, OSCCON);
+    LREP("open %d\r\n", _drv->index);
     return ret;
 }
 int drv_spi_close(void *drv){
@@ -129,6 +140,8 @@ inline int drv_spi_set_speed(void* drv, unsigned long long speed){
     unsigned int i, j, k, diff, diff2;
     unsigned int scale_pri, scale_sec;
 
+    if(speed == 0) return ret;
+
     _drv = container_of(drv, struct DRV_SPI, drv);
     base_reg = SPI_REG_BASE_ADDR + SPI_REG_MODULE_LEN * _drv->index;
 	val = drv_getCpuClockFreq();
@@ -160,6 +173,13 @@ int drv_spi_ioctl(void *drv, int request, unsigned int arguments){
     struct spi_ioc_map_pin *map;
     struct spi_ioc_transfer* xfer;
     unsigned char *pu8;
+    struct DRV_GPIO_WRITE  gpio_write;
+    struct DRV_GPIO_ENABLE gpio_enable;
+
+//#if OS_CRITICAL_METHOD == 3u                               /* Allocate storage for CPU status register */
+//    OS_CPU_SR  cpu_sr = 0u;
+//#endif
+//    unsigned char *tx,*rx;
 
     _drv = container_of(drv, struct DRV_SPI, drv);
     if(_drv->index < 0 || _drv->index > UART_MODULE_COUNT)
@@ -167,6 +187,7 @@ int drv_spi_ioctl(void *drv, int request, unsigned int arguments){
     base_reg = SPI_REG_BASE_ADDR + SPI_REG_MODULE_LEN * _drv->index;
     switch(request){
 		case SPI_IOC_MESSAGE(1):{
+#if 1
 //			OS_ENTER_CRITICAL();
 			xfer = (struct spi_ioc_transfer*)arguments;
 			_drv->xfer.bits_per_word 	= xfer->bits_per_word;
@@ -181,9 +202,16 @@ int drv_spi_ioctl(void *drv, int request, unsigned int arguments){
 			drv_spi_set_bits_per_word(drv, _drv->xfer.bits_per_word);
 			drv_spi_set_speed(drv, _drv->xfer.speed_hz);
 //			OS_EXIT_CRITICAL();
+			LREP("CON1=%04X\r\n", SPI1CON1);
+			LREP("xfer %d\r\n", _drv->index);
 			if(_drv->xfer.len > 0){
 				pu8 = (unsigned char*)_drv->xfer.tx_buf;
 				_drv->xfer_tx_cnt ++;
+
+		    	gpio_write.pin = _drv->cs_gpio_pin;
+		    	gpio_write.value = DRV_GPIO_LOW;
+		    	ioctl(_drv->cs_gpio_handle, DRV_GPIO_IOCTL_WRITE, &gpio_write);
+
 				REG(base_reg + SPI_REG_BUF) = *pu8;
 				if(_drv->xfer.len > 1){
 					OSFlagPend(g_drv_spi_flags,
@@ -193,12 +221,49 @@ int drv_spi_ioctl(void *drv, int request, unsigned int arguments){
 							&err);
 					if(err == OS_ERR_NONE)
 						ret = _drv->xfer_tx_cnt;
+					else{
+					}
 				}else{
 					ret = 1;
 				}
+
+		    	gpio_write.pin = _drv->cs_gpio_pin;
+		    	gpio_write.value = DRV_GPIO_HIGH;
+		    	ioctl(_drv->cs_gpio_handle, DRV_GPIO_IOCTL_WRITE, &gpio_write);
+
 			}else{
 				ret = 0;
 			}
+#else
+			OS_ENTER_CRITICAL();
+			xfer = (struct spi_ioc_transfer*)arguments;
+			_drv->xfer.bits_per_word 	= xfer->bits_per_word;
+			_drv->xfer.len 				= xfer->len;
+			_drv->xfer.rx_buf 			= xfer->rx_buf;
+			_drv->xfer.tx_buf			= xfer->tx_buf;
+			_drv->xfer.speed_hz 		= xfer->speed_hz;
+			_drv->xfer.timeout 			= xfer->timeout;
+			_drv->xfer_tx_cnt = 0;
+			_drv->xfer_rx_cnt = 0;
+			_drv->xfer_wait_tx_done = 0;
+			drv_spi_set_bits_per_word(drv, _drv->xfer.bits_per_word);
+			drv_spi_set_speed(drv, _drv->xfer.speed_hz);
+
+			tx = (unsigned char*)_drv->xfer.tx_buf;
+			rx = (unsigned char*)_drv->xfer.rx_buf;
+			while(_drv->xfer.len > 0){
+				REG(base_reg + SPI_REG_BUF) = *tx;
+				while(SPI1STATbits.SRMPT == 0){
+					Nop();
+				}
+				*rx = REG(base_reg + SPI_REG_BUF);
+				tx++;
+				rx++;
+				_drv->xfer.len --;
+			}
+			ret = xfer->len;
+			OS_EXIT_CRITICAL();
+#endif
 			break;
 		}
 		case SPI_IOC_WR_MODE:{
@@ -228,6 +293,11 @@ int drv_spi_ioctl(void *drv, int request, unsigned int arguments){
 				REG(base_reg+SPI_REG_CON1) = REG(base_reg+SPI_REG_CON1) & (~((unsigned int)0x01 << 8));
 				ret = 0;
 			}
+			DRV_UNLOCK_REG;
+			SPI1CON1 = 0x0260;
+			Nop();
+			LREP("CON1=%04X %04X\r\n", SPI1CON1, OSCCON);
+			LREP("ioctl %d\r\n", _drv->index);
 			break;
 		}
 		case SPI_IOC_WR_LSB_FIRST:{
@@ -250,7 +320,22 @@ int drv_spi_ioctl(void *drv, int request, unsigned int arguments){
 		    	DRV_PERI_INPUT_MAP(DRV_PERIMAP_INPUT_SDI1, map->sdi);
 		    	DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_SDO1, map->sdo);
 		    	DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_SCK1OUT, map->sck);
-		    	DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_SS1OUT, map->ss);
+//		    	DRV_PERI_OUTPUT_MAP(DRV_PERIMAP_OUTPUT_SS1OUT, map->ss);
+		    	_drv->cs_gpio_pin = map->ss;
+		    	_drv->cs_gpio_handle = open("gpio", 0);
+		    	if(_drv->cs_gpio_handle >= 0){
+		    		gpio_enable.pin = _drv->cs_gpio_pin;
+		    		gpio_enable.dir = DRV_GPIO_OUTPUT;
+		    		gpio_enable.opendrain = DRV_GPIO_OPEN_DRAIN_DISABLE;
+		    		if(ioctl(_drv->cs_gpio_handle, DRV_GPIO_IOCTL_ENABLE, &gpio_enable) < 0){
+		    			LREP("enable gpio %d failed\r\n", gpio_enable.pin);
+		    		}
+			    	gpio_write.pin = _drv->cs_gpio_pin;
+			    	gpio_write.value = DRV_GPIO_HIGH;
+			    	ioctl(_drv->cs_gpio_handle, DRV_GPIO_IOCTL_WRITE, &gpio_write);
+		    	}else{
+		    		LREP("open gpio failed\r\n");
+		    	}
 		    	ret = 0;
 		    	break;
 		    case 1:

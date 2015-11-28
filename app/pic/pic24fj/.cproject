@@ -28,6 +28,8 @@
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.477336611" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__PIC24FJ128GA106__"/>
+									<listOptionValue builtIn="false" value="__XC16__"/>
+									<listOptionValue builtIn="false" value="__XC__"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1348327486" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
@@ -39,6 +41,8 @@
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.599606027" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__PIC24FJ128GA106__"/>
+									<listOptionValue builtIn="false" value="__XC16__"/>
+									<listOptionValue builtIn="false" value="__XC__"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1530607013" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
@@ -50,6 +54,8 @@
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.784697413" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__PIC24FJ128GA106__"/>
+									<listOptionValue builtIn="false" value="__XC16__"/>
+									<listOptionValue builtIn="false" value="__XC__"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.879865727" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
@@ -84,4 +90,5 @@
 			<resource resourceType="PROJECT" workspacePath="/pic24fj"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

@@ -14,6 +14,7 @@
 #include <drv/drv_api.h>
 #include <drv/chip/pic24fj/drv_gpio.h>
 #include <drv/chip/pic24fj/drv_spi.h>
+#include <en25f80/en25f80.h>
 
 #include <pthread.h>
 #include <unistd.h>
@@ -31,13 +32,8 @@ pthread_attr_t 	app_task_task_attr;
 static  void  *Sys_Initialize (void *p_arg);
 static  void  *App_Task (void *p_arg);
 int main(void) {
-	unsigned int reset;
-	reset = RCON;
     BSP_Init();
     OSInit();
-
-    App_Initialize();
-    LREP("\r\nstartup %04X\r\n", reset);
 
     pthread_attr_setstackaddr(&sys_initialize_task_attr, Sys_Initialize_Stack);
     pthread_attr_setstacksize(&sys_initialize_task_attr, 512);
@@ -47,58 +43,32 @@ int main(void) {
     OSStart();
     return 0;
 }
-#define TEST_LEN 128
-unsigned char tx[TEST_LEN], rx[TEST_LEN];
 static  void  *Sys_Initialize (void *p_arg)
 {
-    struct DRV_GPIO_WRITE  gpio_write; 
-    struct spi_ioc_transfer spi_xfer;
-    unsigned char cnt = 0;
-    int i, ret=-1;
-    unsigned int address;
+    struct DRV_GPIO_WRITE  gpio_write;
+    int ret;
+    struct DRV_EN25F80_ID flash_id;
     
-    pthread_attr_setstackaddr(&app_task_task_attr, App_Task_Stack);
-    pthread_attr_setstacksize(&app_task_task_attr, 256);
-    pthread_setschedprio(app_task_task, 2);
-    pthread_create(&app_task_task, &app_task_task_attr, App_Task, 0);
+    App_Initialize();
+    LREP("\r\nstartup %04X\r\n", RCON);
+
+//    pthread_attr_setstackaddr(&app_task_task_attr, App_Task_Stack);
+//    pthread_attr_setstacksize(&app_task_task_attr, 256);
+//    pthread_setschedprio(app_task_task, 2);
+//    pthread_create(&app_task_task, &app_task_task_attr, App_Task, 0);
 
     // test
-	gpio_write.pin 		= RESET_PIN;
-    gpio_write.value 	= 0;
-    ioctl(g_fd_gpio, DRV_GPIO_IOCTL_WRITE, &gpio_write);
-    msleep(10);
-    gpio_write.value 	= 1;
-    ioctl(g_fd_gpio, DRV_GPIO_IOCTL_WRITE, &gpio_write);
-    msleep(20);
-
-    address = 0x04;
-    cnt = 0xCC;
-	tx[0] = ((address << 1) & 0b01111110) | 0x01;
-	tx[1] = cnt;
-
-	spi_xfer.bits_per_word = 8;
-	spi_xfer.len = 2;
-	spi_xfer.rx_buf = (unsigned int)&rx[0];
-	spi_xfer.tx_buf = (unsigned int)&tx[0];
-	spi_xfer.speed_hz = 1000000L;
-	spi_xfer.timeout = OS_TICKS_PER_SEC;
-	ret = ioctl(g_fd_spi_1, SPI_IOC_MESSAGE(1), &spi_xfer);
-	LREP("xfer len = %d\r\n", ret);
-
-	tx[0] = (address << 1 & 0b01111110);
-	tx[1] = 0;
-	rx[0] = 0;
-	rx[1] = 0;
-	ret = ioctl(g_fd_spi_1, SPI_IOC_MESSAGE(1), &spi_xfer);
-	LREP("xfer len = %d %02X %02X\r\n", ret, rx[0], rx[1]);
+//    ret = ioctl(g_fd_flash, EN25F80_IOC_RD_ID, &flash_id);
+//    if(ret >= 0){
+//    	LREP("ID %02X %02X%02X\r\n",
+//    			flash_id.manufacturer, flash_id.memory_type, flash_id.memory_capacity);
+//    }else{
+//    	LREP("get ID from flash failed\r\n");
+//    }
 	//
-    gpio_write.value = 0;
+    gpio_write.value = DRV_GPIO_HIGH;
     while(1){
         LREP(".");
-
-    	for(i = 0; i < TEST_LEN; i++){
-    		rx[i] = 0;
-    	}
     	gpio_write.pin = LED_STATUS;
         gpio_write.value = !gpio_write.value;
         ioctl(g_fd_gpio, DRV_GPIO_IOCTL_WRITE, &gpio_write);

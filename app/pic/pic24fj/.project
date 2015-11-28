@@ -146,12 +146,17 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>lib/drivers/mrf24j40</name>
+			<name>lib/drivers/at93c</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>lib/drivers/mrf24j40 (copy)</name>
+			<name>lib/drivers/en25f80</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>lib/drivers/mrf24j40</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -446,6 +451,26 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>lib/drivers/at93c/at93c66.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/at93c/at93c66.c</locationURI>
+		</link>
+		<link>
+			<name>lib/drivers/at93c/at93c66.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/at93c/at93c66.h</locationURI>
+		</link>
+		<link>
+			<name>lib/drivers/en25f80/en25f80.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/en25f80/en25f80.c</locationURI>
+		</link>
+		<link>
+			<name>lib/drivers/en25f80/en25f80.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/en25f80/en25f80.h</locationURI>
+		</link>
+		<link>
 			<name>lib/drivers/mrf24j40/ieee802154_mac.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/mrf24j40/ieee802154_mac.h</locationURI>
@@ -469,21 +494,6 @@
 			<name>lib/drivers/mrf24j40/mrf24j40_internal.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/mrf24j40/mrf24j40_internal.h</locationURI>
-		</link>
-		<link>
-			<name>lib/drivers/mrf24j40 (copy)/ieee802154_mac.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/mrf24j40%20(copy)/ieee802154_mac.h</locationURI>
-		</link>
-		<link>
-			<name>lib/drivers/mrf24j40 (copy)/mrf24j40.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/mrf24j40%20(copy)/mrf24j40.cpp</locationURI>
-		</link>
-		<link>
-			<name>lib/drivers/mrf24j40 (copy)/mrf24j40.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/lib/drivers/mrf24j40%20(copy)/mrf24j40.h</locationURI>
 		</link>
 		<link>
 			<name>lib/frw/linux/frw_debug_stdout.c</name>

@@ -26,7 +26,7 @@
 #define INT32       int32_t
 #define UINT32      uint32_t
 #endif
-#define DEBUG_BUFSIZE   32
+#define DEBUG_BUFSIZE   64
 #endif
 
 

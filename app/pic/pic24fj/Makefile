@@ -18,12 +18,16 @@ PROGRAM_CMD=program_cmd.txt
 PREFIX=@
 OBJS=
 
+OBJS+= \
+$(ROOT)/lib/drivers/en25f80/en25f80.o \
+src/prj_drv.o 
+
 # MLA
 INCLUDES+=-Isrc/miwi
 INCLUDES+=-I$(ROOT)/third-party/mla/framework
-OBJS+= \
-$(ROOT)/third-party/mla/framework/miwi/src/miwi_nvm.o\
-$(ROOT)/third-party/mla/framework/miwi/src/miwi_p2p.o\
+#OBJS+= \
+#$(ROOT)/third-party/mla/framework/miwi/src/miwi_nvm.o\
+#$(ROOT)/third-party/mla/framework/miwi/src/miwi_p2p.o\
 
 # UCOS port
 INCLUDES+=-I$(ROOT)/third-party/Micrium/Software/CustomBoard
@@ -53,6 +57,7 @@ $(ROOT)/third-party/Micrium/Software/uCOS-II/Source/os_time.o \
 $(ROOT)/third-party/Micrium/Software/uCOS-II/Source/os_tmr.o \
 
 # User code
+INCLUDES+=-I$(ROOT)/lib/drivers
 INCLUDES+=-I$(ROOT)/lib/include
 INCLUDES+=-I$(ROOT)/lib/frw/pic
 INCLUDES+=-I$(ROOT)/lib/frw/pic/ucos/include
@@ -68,11 +73,13 @@ $(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_uart.o \
 $(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_common.o \
 $(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_gpio.o \
 $(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_ext_intr.o \
-$(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_spi.o \
 $(ROOT)/lib/frw/pic/frw_string.o \
 $(ROOT)/lib/frw/pic/ucos/src/unistd.o \
 $(ROOT)/lib/frw/pic/ucos/src/pthread.o \
 $(ROOT)/lib/frw/pic/ucos/src/semaphore.o \
+
+#$(ROOT)/lib/frw/pic/drv/chip/pic24fj/drv_spi.o \
+
 
 #$(PREFIX) $(STRIP) --strip-all $(APPNAME)
 all:$(OBJS)
